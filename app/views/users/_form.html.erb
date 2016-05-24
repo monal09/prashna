@@ -1,0 +1,54 @@
+<%= form_for @user, :html => {:class => "form-horizontal"} do |f| %>
+  
+  <%= render partial: "general/errors", locals: {current_object: @user} %>
+  
+ 
+
+  <fieldset>
+  <legend>Sign Up</legend>    
+
+    <div class="form-group">
+      <%= f.label :first_name, "First name", class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= f.text_field :first_name, class: "form-control", placeholder: "First Name" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :last_name, "Last name", class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= f.text_field :last_name, class: "form-control", placeholder: "Last Name" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email, 'Email',class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= f.text_field :email, class: "form-control", placeholder: "email" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password, 'Password',class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= f.password_field :password, class: "form-control", placeholder: "Password" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password_confirmation, 'Password Confirmation',class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Renter Password" %>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="col-md-10 col-md-offset-5">
+        <%= f.submit "Sign Up", class: "btn btn-default btn-primary"%>
+      </div>
+    </div>
+ 
+  </fieldset>
+
+ <% end %>

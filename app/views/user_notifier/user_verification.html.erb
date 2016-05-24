@@ -1,0 +1,11 @@
+<h1>User Verification Mail</h1>
+
+<p>
+  Dear <%= @user.first_name %>,
+
+  Welcome to prashna
+  </br>
+  Please verify you email by clicking on the link below: 
+  <br />
+  <%=link_to account_activation_url(@user.verification_token), account_activation_url(@user.verification_token)  %>
+</p>
