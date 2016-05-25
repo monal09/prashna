@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  
+
   validates :first_name, :last_name, presence: true
   validates :email, uniqueness: true, format: {
     with: REGEXP[:email_validator],
@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_forgot_password_token
+
     loop do
       random_token = SecureRandom.hex
       if !(User.exists?(forgot_password_token: random_token))
