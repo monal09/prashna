@@ -44,30 +44,28 @@ class User < ActiveRecord::Base
   protected
 
   def generate_verification_token
-    
-    loop do
-      random_token = SecureRandom.hex
-      if !(User.exists?(verification_token: random_token))
-        self.verification_token = random_token
-        self.verification_token_expiry_at = Time.current + CONSTANTS["time_to_expiry"].hours
-        break
-      end
-    end
-
+    generate_token(:verification_token, :verification_token_expiry_at, false)
   end
 
   def generate_forgot_password_token
+    generate_token(:verification_token, :verification_token_expiry_at, true)
+  end
+
+  def generate_token(token_for, token_for_expiry_time, should_save)
 
     loop do
       random_token = SecureRandom.hex
-      if !(User.exists?(forgot_password_token: random_token))
-        self.forgot_password_token = random_token
-        self.forgot_password_token_expiry_at = Time.current + CONSTANTS["time_to_expiry"].hours
-        save
+      debugger
+      if !(User.exists?(token_for => random_token))
+        self[token_for] = random_token
+        self[token_for_expiry_time] = Time.current + CONSTANTS["time_to_expiry"].hours
+        if should_save
+          save
+        end
         break
+
       end
     end
-    
   end
 
   def send_verification_mail

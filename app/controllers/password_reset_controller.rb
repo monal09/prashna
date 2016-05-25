@@ -12,12 +12,13 @@ class PasswordResetController < ApplicationController
 
   def create
 
-    if params[:password] == params[:confirm_password]
+    password = params[:password]
+    if password == params[:confirm_password] && password.present?
       
       user = User.find_by(forgot_password_token: params[:token])
 
       if user && user.valid_forgot_password_token?
-        user.reset_password!(params[:password])
+        user.reset_password!(password)
         flash[:notice] = "Password change successfully"
       else
         flash[:notice] = "Invalid verification token"
