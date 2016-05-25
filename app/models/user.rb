@@ -55,7 +55,6 @@ class User < ActiveRecord::Base
 
     loop do
       random_token = SecureRandom.hex
-      debugger
       if !(User.exists?(token_for => random_token))
         self[token_for] = random_token
         self[token_for_expiry_time] = Time.current + CONSTANTS["time_to_expiry"].hours
