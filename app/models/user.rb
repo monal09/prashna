@@ -20,7 +20,11 @@ class User < ActiveRecord::Base
 
   def check_token_expiry
     verification_token_expiry_at > Time.current
-   end
+  end
+
+  def verified?
+    verified_at.present?
+  end
 
   protected
 
@@ -29,7 +33,7 @@ class User < ActiveRecord::Base
       random_token = SecureRandom.hex
       if !(User.exists?(verification_token: random_token))
         self.verification_token = random_token
-        self.verification_token_expiry_at = Time.current + 6.hours
+        self.verification_token_expiry_at = Time.current + TIME_TO_EXPIRY.hours
         break
       end
     end
@@ -40,18 +44,14 @@ class User < ActiveRecord::Base
       random_token = SecureRandom.hex
       if !(User.exists?(forgot_password_token: random_token))
         self.forgot_password_token = random_token
-        self.forgot_password_token_expiry_at = Time.current + 6.hours
+        self.forgot_password_token_expiry_at = Time.current + TIME_TO_EXPIRY.hours
         break
       end
     end
   end
 
-
-
   def send_verification_mail
     UserNotifier.user_verification(self).deliver
   end
-
-
 
 end
