@@ -13,6 +13,7 @@ class CreateUsers < ActiveRecord::Migration
       t.datetime :forgot_password_token_expiry_at
       t.string :remember_me_token
       t.timestamps null: false
+      #FIXME_AB: index / unique index, default values, null values
     end
   end
 end

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   def new
-
+    #FIXME_AB: make a before action for this before_action :ensure_anonymous
     if current_user
       redirect_to root_path
       flash[:notice] = "You are already logged in."
@@ -11,12 +11,12 @@ class UsersController < ApplicationController
   end
 
   def create
-
+    #FIXME_AB: ensure_anonymous
     @user = User.new(user_params)
 
     if @user.save
       redirect_to root_path
-      flash[:notice] = "User #{@user.first_name} was successfully created. A verification
+      flash[:notice] = "Signup successfull!!. A verification
           mail has been sent to your user id #{@user.email}. Please verify your account to continue"
     else
       render action: 'new'
@@ -24,9 +24,17 @@ class UsersController < ApplicationController
 
   end
 
+  #FIXME_AB: should be named as verify / verification
   def activate
-
     user = User.find_by(verification_token: params[:token])
+
+    #FIXME_AB: 
+    # if user && user.valid_verification_tokenc?
+    #   successfully
+    # else
+    #   unsucess
+    # end
+
     if user
       if user.check_token_expiry
         user.verify

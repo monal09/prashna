@@ -4,7 +4,7 @@ class UserNotifier < ApplicationMailer
 
   def user_verification(user)
     @user = user
-    mail to: @user.email, subject: 'Verify your email id'
+    mail to: @user.email, subject: 'Welcome to Prashna, kindly verify your email to continue'
   end
 
 end

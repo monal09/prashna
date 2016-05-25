@@ -6,7 +6,8 @@ class SessionController < ApplicationController
   def create
     user = User.find_by(email: params[:email])
 
-    if user && user.authenticate(params[:password]) && user.verified?
+    if user && user.verified? && user.authenticate(params[:password]) 
+      #FIXME_AB: make a method in applicationcontroller sign_in(user)
       session[:user_id] = user.id
       flash[:notice] = "You have been successfully logged in"
       redirect_to root_path

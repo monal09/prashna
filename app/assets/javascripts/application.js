@@ -14,3 +14,6 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
+
+// FIXME_AB: remove turbolinks from this file, layout and gemfile
+// FIXME_AB: remove unwanted css/js file
