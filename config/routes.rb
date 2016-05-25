@@ -6,10 +6,14 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   get '/verification/:token', to: "users#verification", as: :account_activation
-  post '/password_request', to: "password_request#create"
-  get '/password_request/new', to: "password_request#new"
-  get '/password_reset/:token', to: "password_reset#new", as: :reset_password
-  post '/password_reset', to: "password_reset#create"
+  get '/password_resets/:token', to: "password_resets#new", as: :reset_password
+  #FIXME_AB: use resources
+  resources :password_requests, only: [:create, :new]
+  resources :password_resets, only: [:create, :new]
+
+  # post '/password_request', to: "password_request#create"
+  # get '/password_request/new', to: "password_request#new"
+  # post '/password_reset', to: "password_reset#create"
   resources :users
 
   controller :session do

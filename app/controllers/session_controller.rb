@@ -1,6 +1,6 @@
 class SessionController < ApplicationController
   
-  skip_before_action :ensure_anynomous, only: :destroy
+  before_action :ensure_anynomous, except: :destroy
 
   def new
   end

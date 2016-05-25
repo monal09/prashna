@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_forgot_password_token
-    generate_token(:verification_token, :verification_token_expiry_at, true)
+    generate_token(:forgot_password_token, :forgot_password_token_expiry_at, true)
   end
 
   def generate_token(token_for, token_for_expiry_time, should_save)
