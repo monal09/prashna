@@ -7,11 +7,9 @@ class User < ActiveRecord::Base
     message: "Invalid email"
   }
 
-
   before_create :generate_verification_token
   after_commit :send_verification_mail, on: :create
 
-  #FIXME_AB: verify!
   def verify!
     self.verified_at = Time.current
     self.verification_token = nil
@@ -23,13 +21,30 @@ class User < ActiveRecord::Base
     verification_token_expiry_at > Time.current
   end
 
+  def valid_forgot_password_token?
+    forgot_password_token_expiry_at > Time.current
+  end
+
   def verified?
     verified_at.present?
+  end
+
+  def send_forgot_password_instructions
+    generate_forgot_password_token
+    send_password_recovery_mail
+  end
+
+  def reset_password!(new_password)
+    self.password = new_password
+    self.forgot_password_token = nil
+    self.forgot_password_token_expiry_at = nil
+    save
   end
 
   protected
 
   def generate_verification_token
+    
     loop do
       random_token = SecureRandom.hex
       if !(User.exists?(verification_token: random_token))
@@ -38,22 +53,29 @@ class User < ActiveRecord::Base
         break
       end
     end
+
   end
 
-  # def generate_forgot_password_token
+  def generate_forgot_password_token
 
-  #   loop do
-  #     random_token = SecureRandom.hex
-  #     if !(User.exists?(forgot_password_token: random_token))
-  #       self.forgot_password_token = random_token
-  #       self.forgot_password_token_expiry_at = Time.current + CONSTANTS["time_to_expiry"].hours
-  #       break
-  #     end
-  #   end
-  # end
+    loop do
+      random_token = SecureRandom.hex
+      if !(User.exists?(forgot_password_token: random_token))
+        self.forgot_password_token = random_token
+        self.forgot_password_token_expiry_at = Time.current + CONSTANTS["time_to_expiry"].hours
+        save
+        break
+      end
+    end
+    
+  end
 
   def send_verification_mail
     UserNotifier.email_verification(self).deliver
+  end
+
+  def send_password_recovery_mail
+    UserNotifier.password_reset(self).deliver
   end
 
 end

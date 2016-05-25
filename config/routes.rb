@@ -4,9 +4,12 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'welcome#index'
-  
-  get '/verification/:token', to: "users#verification", as: :account_activation
 
+  get '/verification/:token', to: "users#verification", as: :account_activation
+  post '/password_request', to: "password_request#create"
+  get '/password_request/new', to: "password_request#new"
+  get '/password_reset/:token', to: "password_reset#new", as: :reset_password
+  post '/password_reset', to: "password_reset#create"
   resources :users
 
   controller :session do

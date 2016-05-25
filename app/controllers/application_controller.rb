@@ -30,8 +30,8 @@ class ApplicationController < ActionController::Base
 
   def ensure_anynomous
     if signed_in?
-      redirect_to root_path
       flash[:notice] = "You are already logged in."
+      redirect_to root_path
     end
   end
 

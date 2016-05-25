@@ -1,0 +1,31 @@
+
+  <%= form_tag(password_reset_path, method: :post, class: "form-horizontal") do %>
+    <fieldset>
+    <legend>Forgot Password</legend>
+
+    <div class="form-group">
+      <%= label_tag :password, 'New Password:', class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= password_field_tag :password, params[:password], class: "form-control", placeholder: "Password" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= label_tag :confirm_password, 'Confirm Password:', class: "col-md-2 control-label" %>
+      <div class="col-md-8">
+        <%= password_field_tag :confirm_password, params[:confirm_password], class: "form-control", placeholder: "Password" %>
+      </div>
+    </div>
+
+    <%= hidden_field_tag :token, @token%>
+
+    <div class="form-group">
+      <div class="col-md-8 col-md-offset-5">
+        <%= submit_tag "Submit", class: "btn btn-default btn-primary" %>
+      </div>
+    </div>
+
+    </fieldset>
+  <% end %>
+
+  
