@@ -1,17 +1,11 @@
 class UsersController < ApplicationController
 
   def new
-    #FIXME_AB: make a before action for this before_action :ensure_anonymous
-    if current_user
-      redirect_to root_path
-      flash[:notice] = "You are already logged in."
-    end
-
     @user = User.new
   end
 
   def create
-    #FIXME_AB: ensure_anonymous
+
     @user = User.new(user_params)
 
     if @user.save
@@ -24,28 +18,17 @@ class UsersController < ApplicationController
 
   end
 
-  #FIXME_AB: should be named as verify / verification
-  def activate
+  def verification
     user = User.find_by(verification_token: params[:token])
 
-    #FIXME_AB: 
-    # if user && user.valid_verification_tokenc?
-    #   successfully
-    # else
-    #   unsucess
-    # end
-
-    if user
-      if user.check_token_expiry
-        user.verify
-        session[:user_id] = user.id
-        flash[:notice] = "You have been successfully logged in"
-      else
-        flash[:notice] = "Verification token expired"
-      end
+    if user && user.valid_verification_token?
+      user.verify!
+      sign_in(user)
+      flash[:notice] = "You have been successfully logged in"
     else
       flash[:notice] = "Invalid verification token"
     end
+
     redirect_to root_path
 
   end

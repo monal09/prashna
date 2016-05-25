@@ -1,8 +1,11 @@
 development:
+  time_to_expiry: 6
   email_from: abc@example.com
 
 production:
   email_from: def@example.com
+  time_to_expiry: 6
 
 test:
   email_from: fgh@example.com
+  time_to_expiry: 6

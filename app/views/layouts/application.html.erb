@@ -45,10 +45,8 @@
       
       
       <ul class="nav navbar-nav navbar-right">
-      <% #FIXME_AB: signed_in? -%>
-        <%if session[:user_id]%>
-        <% #FIXME_AB: we can use current_user -%>
-          <li>Welcome <%=User.find(session[:user_id]).first_name%></li>
+        <%if signed_in?%>
+          <li>Welcome <%=current_user.first_name%></li>
           <li><%=link_to("logout", logout_path, method: :delete)%></li>
         <%else%>
           <li>Welcome Guest</li>
@@ -60,11 +58,8 @@
   </div>
 </nav>
 <% #FIXME_AB: move it to common partial -%>
-<% if flash[:alert] %>
-  <div class="alert alert-dismissible alert-warning">
-    <p><%= flash[:alert] %></p>
-  </div>
-<% end %>
+<%= render partial: "shared/flashmessage" %>
+
 <%= yield %>
 
 </body>

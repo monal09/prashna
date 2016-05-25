@@ -1,14 +1,15 @@
 class SessionController < ApplicationController
 
+  skip_before_action :ensure_anynomous
+  
   def new
   end
 
   def create
     user = User.find_by(email: params[:email])
 
-    if user && user.verified? && user.authenticate(params[:password]) 
-      #FIXME_AB: make a method in applicationcontroller sign_in(user)
-      session[:user_id] = user.id
+    if user && user.verified? && user.authenticate(params[:password])
+      sign_in( user )
       flash[:notice] = "You have been successfully logged in"
       redirect_to root_path
     else

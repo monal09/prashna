@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
   
-  get '/activate/:token', to: "users#activate", as: :account_activation
+  get '/verification/:token', to: "users#verification", as: :account_activation
 
   resources :users
 

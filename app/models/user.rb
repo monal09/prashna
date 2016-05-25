@@ -2,8 +2,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   validates :first_name, :last_name, presence: true
-  #FIXME_AB: whenever use uniqueness check for case sensitivity akhil AKHIL shold be same
-  validates :email, uniqueness: true, format: {
+  validates :email, uniqueness: {case_sensitive: false}, format: {
     with: REGEXP[:email_validator],
     message: "Invalid email"
   }
@@ -13,15 +12,14 @@ class User < ActiveRecord::Base
   after_commit :send_verification_mail, on: :create
 
   #FIXME_AB: verify!
-  def verify
+  def verify!
     self.verified_at = Time.current
     self.verification_token = nil
     self.verification_token_expiry_at = nil
     save
   end
 
-  #FIXME_AB: rename valid_verification_token?
-  def check_token_expiry
+  def valid_verification_token?
     verification_token_expiry_at > Time.current
   end
 
@@ -36,27 +34,26 @@ class User < ActiveRecord::Base
       random_token = SecureRandom.hex
       if !(User.exists?(verification_token: random_token))
         self.verification_token = random_token
-        self.verification_token_expiry_at = Time.current + TIME_TO_EXPIRY.hours
+        self.verification_token_expiry_at = Time.current + CONSTANTS["time_to_expiry"].hours
         break
       end
     end
   end
 
-  def generate_forgot_password_token
+  # def generate_forgot_password_token
 
-    loop do
-      random_token = SecureRandom.hex
-      if !(User.exists?(forgot_password_token: random_token))
-        self.forgot_password_token = random_token
-        self.forgot_password_token_expiry_at = Time.current + TIME_TO_EXPIRY.hours
-        break
-      end
-    end
-  end
+  #   loop do
+  #     random_token = SecureRandom.hex
+  #     if !(User.exists?(forgot_password_token: random_token))
+  #       self.forgot_password_token = random_token
+  #       self.forgot_password_token_expiry_at = Time.current + CONSTANTS["time_to_expiry"].hours
+  #       break
+  #     end
+  #   end
+  # end
 
   def send_verification_mail
-    #FIXME_AB: user_verification to email_verification
-    UserNotifier.user_verification(self).deliver
+    UserNotifier.email_verification(self).deliver
   end
 
 end
