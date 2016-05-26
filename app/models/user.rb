@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   validates :password, length: {minimum: 6}, if: "validate_password.present?"
 
   before_create :generate_verification_token, if: "!admin?"
-  before_create :validate_admin
+  before_create :validate_admin, if: "admin?"
   after_commit :send_verification_mail, on: :create
   before_validation :set_validate_password, on: :create
 
@@ -23,9 +23,6 @@ class User < ActiveRecord::Base
     self.verified_at = Time.current
     self.verification_token = nil
     self.verification_token_expiry_at = nil
-    if admin?
-      save
-    end
   end
 
   def change_password!(new_password, confirm_password)
@@ -110,7 +107,7 @@ class User < ActiveRecord::Base
   end
 
   def validate_admin
-    self.verified_at = Time.current if admin?
+    self.verified_at = Time.current
   end
 
 end

@@ -16,7 +16,6 @@ namespace :admin do
     user.password = STDIN.gets.chomp
 
     user.admin = true
-    user.verify!
 
     if user.save
       puts "Admin user successfully created"
