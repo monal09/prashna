@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
       if !(User.exists?(token_for => random_token))
         self[token_for] = random_token
         #FIXME_AB: CONSTANTS["time_to_expiry"].hours.from_now
-        self[token_for_expiry_time] = Time.current + CONSTANTS["time_to_expiry"].hours
+        self[token_for_expiry_time] = CONSTANTS["time_to_expiry"].hours.from_now
         if should_save
           save
         end
