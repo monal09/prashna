@@ -1,5 +1,5 @@
 class SessionController < ApplicationController
-  
+
   before_action :ensure_anynomous, except: :destroy
 
   def new
@@ -10,6 +10,10 @@ class SessionController < ApplicationController
 
     if user && user.verified? && user.authenticate(params[:password])
       sign_in( user )
+      if params[:remember_me]
+        user.generate_remember_me_token
+        remember(user)
+      end
       flash[:notice] = "You have been successfully logged in"
       redirect_to root_path
     else
@@ -19,7 +23,9 @@ class SessionController < ApplicationController
   end
 
   def destroy
+    current_user.reset_remember_me
     reset_session
+    cookies.delete :remember_token
     flash[:notice] = "You have been successfully logged out"
     redirect_to root_path
   end

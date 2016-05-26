@@ -41,6 +41,22 @@ class User < ActiveRecord::Base
     save
   end
 
+  def generate_remember_me_token
+    loop do
+      random_token = SecureRandom.hex
+      if !(User.exists?(remember_me_token: random_token))
+        self.remember_me_token = random_token
+        save
+        break
+      end
+    end
+  end
+
+  def reset_remember_me
+    self.remember_me_token = nil
+    save
+  end
+
   protected
 
   def generate_verification_token

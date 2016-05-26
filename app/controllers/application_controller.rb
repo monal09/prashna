@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  before_action :find_remembered_user
+
   helper_method :current_user
   helper_method :signed_in?
 
@@ -26,10 +28,24 @@ class ApplicationController < ActionController::Base
     session[:user_id] = user.id
   end
 
+  def remember(user)
+    cookies.permanent[:remember_token] = user.remember_me_token
+  end
+
   def ensure_anynomous
     if signed_in?
       flash[:notice] = "You are already logged in."
       redirect_to root_path
+    end
+  end
+
+  def find_remembered_user
+    if cookies[:remember_token]
+      token = cookies[:remember_token]
+      user = User.find_by(remember_me_token: token)
+      if user && user.verified?
+        sign_in(user)
+      end
     end
   end
 
