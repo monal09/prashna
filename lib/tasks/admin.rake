@@ -22,7 +22,9 @@ namespace :admin do
       puts "Admin user successfully created"
     else
       puts "Failed to create admin user"
-      puts user.errors.full_messages
+      user.errors.full_messages.each do |msg|
+        p msg
+      end
     end
 
   end
