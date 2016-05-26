@@ -6,7 +6,6 @@ class SessionController < ApplicationController
   end
 
   def create
-    #FIXME_AB: verified 
     user = User.verified.where(email: params[:email]).first
 
     if user && user.authenticate(params[:password])

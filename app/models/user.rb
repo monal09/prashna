@@ -13,9 +13,9 @@ class User < ActiveRecord::Base
   validates :password, length: {minimum: 6}, if: "validate_password.present?"
 
   before_create :generate_verification_token, if: "!admin?"
-  before_create :validate_admin, if: "admin?"
-  after_commit :send_verification_mail, on: :create
+  before_create :auto_verify_email, if: "admin?"
   before_validation :set_validate_password, on: :create
+  after_commit :send_verification_mail, on: :create
 
   scope :verified, -> {where.not(verified_at: nil)}
 
@@ -62,7 +62,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  #FIXME_AB: reset_remember_me!
   def reset_remember_me!
     self.remember_me_token = nil
     save
@@ -84,7 +83,6 @@ class User < ActiveRecord::Base
       random_token = SecureRandom.hex
       if !(User.exists?(token_for => random_token))
         self[token_for] = random_token
-        #FIXME_AB: CONSTANTS["time_to_expiry"].hours.from_now
         self[token_for_expiry_time] = CONSTANTS["time_to_expiry"].hours.from_now
         if should_save
           save
@@ -106,7 +104,7 @@ class User < ActiveRecord::Base
     self.validate_password = true
   end
 
-  def validate_admin
+  def auto_verify_email
     self.verified_at = Time.current
   end
 

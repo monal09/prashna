@@ -5,7 +5,6 @@ class PasswordRequestsController < ApplicationController
   end
 
   def create
-    #FIXME_AB: verfied scope
     user = User.verified.where(email: params[:email]).first
     if user
       user.send_forgot_password_instructions

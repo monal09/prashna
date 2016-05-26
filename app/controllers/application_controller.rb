@@ -42,7 +42,6 @@ class ApplicationController < ActionController::Base
     if cookies[:remember_token].present?
       token = cookies[:remember_token]
       user = User.verified.where(remember_me_token: token).first
-      #FIXME_AB: once you use verified scope you don't need to check it here
       if user
         sign_in(user)
       end

@@ -8,11 +8,9 @@ Rails.application.routes.draw do
   get '/verification/:token', to: "users#verification", as: :account_activation
   get '/password_resets/:token', to: "password_resets#new", as: :reset_password
   resources :password_requests, only: [:create, :new]
-  #FIXME_AB: I think we don't need new, remove and check
-  resources :password_resets, only: [:create, :new]
+  resources :password_resets, only: [:create]
 
-  #FIXME_AB: we don't need all routes for now
-  resources :users
+  resources :users, only: [:new, :create]
 
   controller :session do
     get  'login', to: :new
