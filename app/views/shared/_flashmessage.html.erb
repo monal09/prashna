@@ -4,3 +4,10 @@
     <p><%= flash[:alert] %></p>
   </div>
 <% end %>
+
+<% if flash[:errors] %>
+  <div class="alert alert-dismissible alert-danger">
+    <p><%= flash[:errors] %></p>
+  </div>
+<% end %>
+

@@ -16,4 +16,3 @@
 !/log/.keep
 /tmp
 .byebug_history
-config/constants.yml

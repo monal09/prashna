@@ -6,8 +6,8 @@ class PasswordRequestsController < ApplicationController
 
   def create
     #FIXME_AB: verfied scope
-    user = User.find_by(email: params[:email])
-    if user && user.verified?
+    user = User.verified.where(email: params[:email]).first
+    if user
       user.send_forgot_password_instructions
       flash[:notice] = "Password reset instructions has been sent to your registered email.
         Follow the instructions in the email to proceed"

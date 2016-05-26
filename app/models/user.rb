@@ -12,14 +12,28 @@ class User < ActiveRecord::Base
 
   validates :password, length: {minimum: 6}, if: "validate_password.present?"
 
-  before_create :generate_verification_token
+  before_create :generate_verification_token, if: "!admin?"
+  before_create :validate_admin
   after_commit :send_verification_mail, on: :create
   before_validation :set_validate_password, on: :create
+
+  scope :verified, -> {where.not(verified_at: nil)}
 
   def verify!
     self.verified_at = Time.current
     self.verification_token = nil
     self.verification_token_expiry_at = nil
+    if admin?
+      save
+    end
+  end
+
+  def change_password!(new_password, confirm_password)
+    self.validate_password = true
+    self.password = new_password
+    self.password_confirmation = confirm_password
+    self.forgot_password_token = nil
+    self.forgot_password_token_expiry_at = nil
     save
   end
 
@@ -40,13 +54,6 @@ class User < ActiveRecord::Base
     send_password_recovery_mail
   end
 
-  def reset_password!(new_password)
-    self.password = new_password
-    self.forgot_password_token = nil
-    self.forgot_password_token_expiry_at = nil
-    save
-  end
-
   def generate_remember_me_token
     loop do
       random_token = SecureRandom.hex
@@ -59,7 +66,7 @@ class User < ActiveRecord::Base
   end
 
   #FIXME_AB: reset_remember_me!
-  def reset_remember_me
+  def reset_remember_me!
     self.remember_me_token = nil
     save
   end
@@ -100,6 +107,10 @@ class User < ActiveRecord::Base
 
   def set_validate_password
     self.validate_password = true
+  end
+
+  def validate_admin
+    self.verified_at = Time.current if admin?
   end
 
 end

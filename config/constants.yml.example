@@ -1,7 +1,6 @@
 development:
   time_to_expiry: 6
-  email_from: monal@vinsol.com
-  password: monal123
+  email_from: monal@vinsol
 
 production:
   email_from: def@example.com

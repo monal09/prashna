@@ -20,9 +20,9 @@ class UsersController < ApplicationController
   end
 
   def verification
-    user = User.find_by(verification_token: params[:token])
+    user = User.find_by(verification_token: params[:token]).first
 
-    if user && user.valid_verification_token? && user.verify!
+    if user && user.valid_verification_token?
       sign_in(user)
       flash[:notice] = "You have been successfully logged in"
     else

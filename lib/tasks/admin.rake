@@ -1,6 +1,6 @@
-namespace :users do
+namespace :admin do
   desc "create a new admin"
-  task add_admin: :environment do
+  task new: :environment do
 
     user = User.new
     puts "Enter first name"
@@ -15,14 +15,11 @@ namespace :users do
     puts "Enter password"
     user.password = STDIN.gets.chomp
 
-    user.verified_at = Time.current #FIXME_AB: this should be done in before_create
     user.admin = true
+    user.verify!
 
     if user.save
       puts "Admin user successfully created"
-      user.verification_token = nil
-      user.verification_token_expiry_at = nil
-      user.save
     else
       puts "Failed to create admin user"
       puts user.errors.full_messages

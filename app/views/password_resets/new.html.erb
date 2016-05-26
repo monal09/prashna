@@ -1,4 +1,4 @@
-<% #FIXME_AB: Since we'll render then show errors -%>
+  <%= render partial: "shared/errors", locals: {object: @user} %>
   <%= form_tag(password_resets_path, method: :post, class: "form-horizontal") do %>
     <fieldset>
     <legend>Forgot Password</legend>

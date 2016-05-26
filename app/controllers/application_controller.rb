@@ -17,8 +17,7 @@ class ApplicationController < ActionController::Base
 
   def find_logged_in_user
     if session[:user_id]
-      #FIXME_AB: use verified scope
-      User.find(session[:user_id])
+      User.verified.where(id: session[:user_id]).first
     else
       sign_in_from_remember_token
     end    
@@ -42,10 +41,9 @@ class ApplicationController < ActionController::Base
   def sign_in_from_remember_token
     if cookies[:remember_token].present?
       token = cookies[:remember_token]
-      #FIXME_AB: User.verified.find_by
-      user = User.find_by(remember_me_token: token)
+      user = User.verified.where(remember_me_token: token).first
       #FIXME_AB: once you use verified scope you don't need to check it here
-      if user && user.verified?
+      if user
         sign_in(user)
       end
       user

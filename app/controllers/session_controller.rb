@@ -7,9 +7,9 @@ class SessionController < ApplicationController
 
   def create
     #FIXME_AB: verified 
-    user = User.find_by(email: params[:email])
+    user = User.verified.where(email: params[:email]).first
 
-    if user && user.verified? && user.authenticate(params[:password])
+    if user && user.authenticate(params[:password])
       sign_in( user )
       if params[:remember_me]
         user.generate_remember_me_token
@@ -24,7 +24,7 @@ class SessionController < ApplicationController
   end
 
   def destroy
-    current_user.reset_remember_me
+    current_user.reset_remember_me!
     reset_session
     cookies.delete :remember_token
     flash[:notice] = "You have been successfully logged out"
