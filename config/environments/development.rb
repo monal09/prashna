@@ -44,6 +44,7 @@ Rails.application.configure do
     port: 587,
     domain: "gmail.com",
     authentication: "plain",
+    #FIXME_AB: Don't hardcode email and passwword. More them to constants.rb
     user_name: "monal@vinsol.com",
     password: "monal123",
     enable_starttls_auto: true

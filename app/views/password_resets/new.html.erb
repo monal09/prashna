@@ -1,4 +1,4 @@
-
+<% #FIXME_AB: Since we'll render then show errors -%>
   <%= form_tag(password_resets_path, method: :post, class: "form-horizontal") do %>
     <fieldset>
     <legend>Forgot Password</legend>
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <%= hidden_field_tag :token, @token%>
+    <%= hidden_field_tag :token, params[:token]%>
 
     <div class="form-group">
       <div class="col-md-8 col-md-offset-5">

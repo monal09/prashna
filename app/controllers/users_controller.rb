@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   end
 
   def create
-
     @user = User.new(user_params)
 
     if @user.save
@@ -23,8 +22,7 @@ class UsersController < ApplicationController
   def verification
     user = User.find_by(verification_token: params[:token])
 
-    if user && user.valid_verification_token?
-      user.verify!
+    if user && user.valid_verification_token? && user.verify!
       sign_in(user)
       flash[:notice] = "You have been successfully logged in"
     else
@@ -32,7 +30,6 @@ class UsersController < ApplicationController
     end
 
     redirect_to root_path
-
   end
 
   private

@@ -9,7 +9,7 @@ class UserNotifier < ApplicationMailer
 
   def password_reset(user)
     @user = user
-    mail to: @user.email, subject: 'Password Recovery'
+    mail to: @user.email, subject: 'Prashna, Password reset instructions'
   end
 
 end

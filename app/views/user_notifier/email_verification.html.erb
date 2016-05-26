@@ -9,3 +9,6 @@
   <br />
   <%=link_to account_activation_url(@user.verification_token), account_activation_url(@user.verification_token)  %>
 </p>
+<p>
+	This validation link is valid till <%= @user.verification_token_expiry_at %>.
+</p>

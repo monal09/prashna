@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  
+  attr_accessor :validate_password
+
   has_secure_password
 
   validates :first_name, :last_name, presence: true
@@ -7,8 +10,11 @@ class User < ActiveRecord::Base
     message: "Invalid email"
   }
 
+  validates :password, length: {minimum: 6}, if: "validate_password.present?"
+
   before_create :generate_verification_token
   after_commit :send_verification_mail, on: :create
+  before_validation :set_validate_password, on: :create
 
   def verify!
     self.verified_at = Time.current
@@ -52,6 +58,7 @@ class User < ActiveRecord::Base
     end
   end
 
+  #FIXME_AB: reset_remember_me!
   def reset_remember_me
     self.remember_me_token = nil
     save
@@ -73,22 +80,26 @@ class User < ActiveRecord::Base
       random_token = SecureRandom.hex
       if !(User.exists?(token_for => random_token))
         self[token_for] = random_token
+        #FIXME_AB: CONSTANTS["time_to_expiry"].hours.from_now
         self[token_for_expiry_time] = Time.current + CONSTANTS["time_to_expiry"].hours
         if should_save
           save
         end
         break
-
       end
     end
   end
 
   def send_verification_mail
-    UserNotifier.email_verification(self).deliver
+    UserNotifier.email_verification(self).deliver unless admin?
   end
 
   def send_password_recovery_mail
     UserNotifier.password_reset(self).deliver
+  end
+
+  def set_validate_password
+    self.validate_password = true
   end
 
 end
