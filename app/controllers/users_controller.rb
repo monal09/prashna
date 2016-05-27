@@ -22,9 +22,10 @@ class UsersController < ApplicationController
   def verification
     user = User.find_by(verification_token: params[:token])
     if user && user.valid_verification_token?
+      user.credit_transactions.create(amount: 5, event: :signup, resource_id: user.id,resource_type: user.class)
       sign_in(user)
       user.verify!
-      flash[:notice] = "You have been successfully logged in"
+      flash[:notice] = "You have been successfully logged in and 5 credits have been added to your account"
     else
       flash[:notice] = "Invalid verification token"
     end
