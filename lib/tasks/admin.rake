@@ -11,7 +11,7 @@ namespace :admin do
 
     puts "Enter email"
     user.email = STDIN.gets.chomp
-
+    
     puts "Enter password"
     user.password = STDIN.gets.chomp
 
