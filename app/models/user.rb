@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
     self.verified_at = Time.current
     self.verification_token = nil
     self.verification_token_expiry_at = nil
+    save
   end
 
   def change_password!(new_password, confirm_password)

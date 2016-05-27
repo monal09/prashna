@@ -1,25 +1,22 @@
-
-  <%= form_tag(password_requests_path, method: :post, class: "form-horizontal") do %>
+<div class = 'row' >
+  <div class = "well center-block col-lg-4">
+    <%= form_tag(password_requests_path, method: :post, class: "form-horizontal") do %>
     <fieldset>
-    <legend>Forgot Password</legend>
+      <legend>Forgot Password</legend>
       
-    <div class="form-group">
-      <%= label_tag :email, 'Email:', class: "col-md-2 control-label" %>
-      <div class="col-md-8">
-        <%= email_field_tag :email, params[:email], class: "form-control", placeholder: "Email" %>
+      <div class="form-group">
+        <%= label_tag :email, 'Email:', class: "col-md-2 control-label" %>
+        <div class="col-md-8">
+          <%= email_field_tag :email, params[:email], class: "form-control", placeholder: "Email" %>
+        </div>
       </div>
-    </div>
-
-    <div class="form-group">
-      <div class="col-md-8 col-md-offset-4">
-      <p>An activation link would be sent to your registerde email id</p>
+      <div class="form-group">
+        <p class = "col-md-offset-1">An activation link would be sent to your registerd email id</p>
+        <div class="col-md-8 col-md-offset-5">
+          <%= submit_tag "Submit", class: "btn btn-default btn-primary" %>
+        </div>
       </div>
-      <div class="col-md-8 col-md-offset-5">
-        <%= submit_tag "Submit", class: "btn btn-default btn-primary" %>
-      </div>
-    </div>
-
     </fieldset>
-  <% end %>
-
-  
+    <% end %>
+  </div>
+</div>
