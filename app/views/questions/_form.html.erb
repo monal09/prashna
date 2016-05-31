@@ -1,61 +1,59 @@
 <div class="container">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading"> <strong class="">Ask Question</strong>
-				</div>
-				<div class="panel-body">
-					
-					<%= form_for @question, :html => {:class => "form-horizontal"} do |f| %>
-					
-					<%= render partial: "shared/errors", locals: {object: @question} %>
-					
-					<div class="form-group">
-						<%= f.label :title, "Title", class: "col-md-2 control-label" %>
-						<div class="col-md-8">
-							<%= f.text_field :title, class: "form-control", placeholder: "Title" %>
-						</div>
-					</div>
-					<div class="form-group">
-						<%= f.label :content, "Content", class: "col-md-2 control-label" %>
-						<div class="col-md-8">
-							<%= f.text_area :content, class: "form-control", placeholder: "Content", rows: 10 %>
-						</div>
-					</div>
-					<div class="form-group">
-						<%= f.label :uploaded_file, "Attach pdf", class: "col-md-2 control-label" %>
-						<div class="col-md-8">
-							<%= f.file_field :uploaded_file, class: "form-control"%>
-						</div>
-					</div>
-
-						<div class="form-group">
-							<%= f.label :associated_topics, "Topic", class: "col-md-2 control-label" %>
-							<div class="col-md-8">
-								<%= f.text_field :associated_topics, class: "form-control", placeholder: "Topics" %>
-							</div>
-						</div>
-
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-9">
-							<div class="checkbox">
-								<label class="">
-								<%= f.check_box :published%>Publish Immediately</label>
-							</div>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<div class="col-md-10 col-md-offset-5">
-							<%= f.submit "Submit", class: "btn btn-default btn-primary"%>
-						</div>
-					</div>
-					
-				</fieldset>
-				<% end %>
-				
-			</div>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="panel panel-default">
+        <div class="panel-heading"> <strong class="">Ask Question</strong>
+        </div>
+        <div class="panel-body">
+          
+          <%= form_for @question, :html => {:class => "form-horizontal"} do |f| %>
+          
+          <%= render partial: "shared/errors", locals: {object: @question} %>
+          
+          <div class="form-group">
+            <%= f.label :title, "Title", class: "col-md-2 control-label" %>
+            <div class="col-md-8">
+              <%= f.text_field :title, class: "form-control", placeholder: "Title" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :content, "Content", class: "col-md-2 control-label" %>
+            <div class="col-md-8">
+              <%= f.text_area :content, class: "form-control", placeholder: "Content", rows: 10 %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :uploaded_file, "Attach pdf", class: "col-md-2 control-label" %>
+            <div class="col-md-8">
+              <%= f.file_field :uploaded_file, class: "form-control"%>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :associated_topics, "Topic", class: "col-md-2 control-label" %>
+            <div class="col-md-8">
+              <%= f.text_field :associated_topics, class: "form-control", placeholder: "Topics" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-9">
+              <div class="checkbox">
+                <label class="">
+                <%= f.check_box :published%>Publish Immediately</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="col-md-10 col-md-offset-5">
+              <%= f.submit "Submit", class: "btn btn-default btn-primary"%>
+            </div>
+          </div>
+          
+        </fieldset>
+        <% end %>
+        
+      </div>
+    </div>
+  </div>
 </div>
 </div>
