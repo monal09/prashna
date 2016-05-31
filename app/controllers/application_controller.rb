@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include PermissionHelper
 
-  helper_method :current_user, :signed_in?, :can_edit_question?
+  helper_method :current_user, :signed_in?
 
   def current_user
     @current_user ||= find_logged_in_user

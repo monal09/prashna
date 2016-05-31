@@ -1,6 +1,10 @@
 module PermissionHelper
   extend ActiveSupport::Concern
 
+  included  do
+    helper_method :can_edit_question?, :can_view_question?
+  end
+
   private
 
   def can_edit_question?( question, user )
