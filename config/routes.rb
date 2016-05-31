@@ -10,9 +10,13 @@ Rails.application.routes.draw do
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
-  resources :users, only: [:new, :create] do
+  resources :users, only: [:new, :create]
+
+  scope :my_acccount do
     resources :credit_transactions, only: [:index]
   end
+
+  resources :questions
 
   controller :session do
     get  'login', to: :new

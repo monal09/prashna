@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   has_many :credit_transactions, dependent: :destroy
+  has_many :questions, dependent: :nullify
 
   validates :first_name, :last_name, presence: true
   validates :email, uniqueness: {case_sensitive: false}, format: {
@@ -19,13 +20,17 @@ class User < ActiveRecord::Base
   before_validation :set_validate_password, on: :create
   after_commit :send_verification_mail, on: :create
 
+
   scope :verified, -> {where.not(verified_at: nil)}
 
   def verify!
-    self.verified_at = Time.current
-    self.verification_token = nil
-    self.verification_token_expiry_at = nil
-    save
+    self.transaction do
+      credit_transactions.signup.create!(amount: CONSTANTS["initial_credit_amount"], resource_id: id,resource_type: self.class)
+      self.verified_at = Time.current
+      self.verification_token = nil
+      self.verification_token_expiry_at = nil
+      save
+    end
   end
 
   def change_password!(new_password, confirm_password)
