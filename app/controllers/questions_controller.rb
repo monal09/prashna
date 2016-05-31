@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
 
   before_action :set_question, only: [:show, :edit, :update]
   before_action :authenticate, except: :show
-  before_action :check_published_status, only: :show
+  before_action :check_visibilty, only: :show
   before_action :check_privelage_for_editing, only: [:edit, :update]
 
   def index
@@ -46,7 +46,7 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :content, :published, :uploaded_file, :associated_topics)
   end
 
-  def check_published_status
+  def check_visibilty
     redirect_to root_path, notice: "You are not allowed to access this question." unless can_view_question?(@question, current_user)
 
   end
