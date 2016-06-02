@@ -40,6 +40,16 @@ class Question < ActiveRecord::Base
     topics.map(&:name).join(',')
   end
 
+  def publish
+    self.published = true
+    save
+  end
+
+  def unpublish
+    self.published = false
+    save
+  end
+
   private
 
   def set_path
@@ -80,16 +90,18 @@ class Question < ActiveRecord::Base
   end
 
   def add_topics
-    current_topics = associated_topics.split(',')
-    self.topics = current_topics.map do |topic|
-      Topic.find_or_create_by(name: topic.strip)
+    if associated_topics
+      current_topics = associated_topics.split(',')
+      self.topics = current_topics.map do |topic|
+        Topic.find_or_create_by(name: topic.strip)
+      end
     end
   end
 
   def ensure_sufficient_credit_balance
     if user.credit_balance < CONSTANTS["credit_required_for_asking_question"]
-      errors[:base] = "Insufficient credit balance. Consider buying credits to pursue.< br/>
-                       You require #{CONSTANTS['credit_required_for_asking_question']} for asking question"
+      errors[:base] = "Insufficient credit balance. Consider buying credits to pursue.
+                       You require #{CONSTANTS['credit_required_for_asking_question']} credit point for asking question"
       false
     end
   end

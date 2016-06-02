@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :ensure_anynomous
+  before_action :ensure_anynomous, except: :myquestions
 
   def new
     @user = User.new
@@ -31,6 +31,12 @@ class UsersController < ApplicationController
 
     redirect_to root_path
   end
+
+  def myquestions
+    @questions = current_user.questions
+  end
+
+
 
   private
 

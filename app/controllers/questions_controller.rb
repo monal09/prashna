@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
 
-  before_action :set_question, only: [:show, :edit, :update]
+  before_action :set_question, only: [:show, :edit, :update, :publish, :unpublish]
   before_action :authenticate, except: :show
   before_action :check_visibilty, only: :show
   before_action :check_privelage_for_editing, only: [:edit, :update]
@@ -37,6 +37,15 @@ class QuestionsController < ApplicationController
     else
       render action: "edit"
     end
+  end
+
+  def publish
+    @published = @question.publish
+    sleep 2
+  end
+
+  def unpublish
+    @unpublished = @question.unpublish
   end
 
 

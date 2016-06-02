@@ -11,7 +11,12 @@
  * file per style scope.
  *
  *= require welcome
+ *= require images
  *= require_self
  *= require bootstrap
 
  */
+
+.error-txt{
+	color: red;
+}

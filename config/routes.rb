@@ -10,10 +10,14 @@ Rails.application.routes.draw do
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
+  get '/questions/:id/publish', to: "questions#publish", as: :publish
+  get '/questions/:id/unpublish', to: "questions#unpublish", as: :unpublish
   resources :users, only: [:new, :create]
 
-  scope :my_acccount do
+
+  scope :my_account do
     resources :credit_transactions, only: [:index]
+    get '/questions', to: "users#myquestions", as: :myquestions
   end
 
   resources :questions
