@@ -7,16 +7,16 @@ $(document).ready(function() {
   var $unpublish_button = $("[data-behavior=unpublish]");
 
   $("[data-behavior=publish], [data-behavior=unpublish]").on("ajax:before", function(){
-    $(this).siblings().last().show();
+    $(this).siblings("div:last").show();
   });
 
   $("[data-behavior=publish], [data-behavior=unpublish]").on("ajax:complete", function(){
-    $(this).siblings().last().hide();
+    $(this).siblings("div:last").hide();
   });
 
   $publish_button.on("ajax:success", function(event, data, status, xhr) {
 
-   if(data.status === "failure"){
+   if(failureDataStatus(data)){
      
      var $all_errors = $('<div>');
      $("#modal-body").empty();
@@ -40,7 +40,7 @@ $(document).ready(function() {
   });
 
   $unpublish_button.on("ajax:success", function(event, data, status, xhr) {
-   if(data.status === "failure"){
+   if(failureDataStatus()){
      var $message = $("<div>")
      var $error = $("<p>").text("Failed to unpublish. Please retry.");
      $message.append($error);
@@ -56,6 +56,14 @@ $(document).ready(function() {
 
      }
   });
+
+  function failureDataStatus(data){
+    if(data.status === "failure"){
+      return true;
+    }
+    return false;
+
+  }
 
   function showAndHide($first, $second){
     $first.addClass("hidden");
