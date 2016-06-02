@@ -16,7 +16,7 @@ $(document).ready(function() {
 
   $publish_button.on("ajax:success", function(event, data, status, xhr) {
 
-   if(data.status == "failure"){
+   if(data.status === "failure"){
      
      var $all_errors = $('<div>');
      $("#modal-body").empty();
@@ -40,7 +40,7 @@ $(document).ready(function() {
   });
 
   $unpublish_button.on("ajax:success", function(event, data, status, xhr) {
-   if(data.status == "failure"){
+   if(data.status === "failure"){
      var $message = $("<div>")
      var $error = $("<p>").text("Failed to unpublish. Please retry.");
      $message.append($error);

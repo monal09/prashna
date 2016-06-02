@@ -3,4 +3,4 @@ if @unpublished
 else
   json.status "failure"
   json.errors @question.errors.full_messages
- end
+end

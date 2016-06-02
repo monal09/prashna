@@ -1,5 +1,7 @@
 <% #FIXME_AB: use content_for tag to include js in html head -%>
-<%= javascript_include_tag 'question_publish' %>
+<% content_for :head do%>
+  <%= javascript_include_tag 'question_publish' %>
+<%end%>
 
 <h3> QUestions history</h3>
 <table class="table table-striped table-hover ">
