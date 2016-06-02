@@ -14,55 +14,46 @@ $(document).ready(function() {
     $(this).siblings("div:last").hide();
   });
 
-  $publish_button.on("ajax:success", function(event, data, status, xhr) {
+  $publish_button.on("ajax:success", function(event, data){
+    updatePublishStatus(event, data, "publish");
+  });
 
-   if(failureDataStatus(data)){
-     
-     var $all_errors = $('<div>');
-     $("#modal-body").empty();
-     $(data.errors).each(function(){
+  $unpublish_button.on("ajax:success", function(event, data){
+    updatePublishStatus(event, data, "unpublish");
+  });
+
+  function updatePublishStatus( event, data, event_name ){
+    if(data.status === "failure"){
+      var $all_errors = $('<div>');
+      $("#modal-body").empty();
+      $(data.errors).each(function(){
        var $error = $("<p>").text(this);
        $all_errors.append($error);
      });
      $all_errors.addClass("error-txt");
      $("#modal-body").append($all_errors);
-     $("h4.modal-title").html("Can not publish question due to following reasons:");
-
+     var error_message = getErrorMessage(event_name);
+     $("h4.modal-title").html(error_message);
      $('#modal').modal();
+    }else{
+      var $target = $(event.target);
+      showAndHide( $target, $target.siblings("a:first") );
+      var $status_container = findStatusContainer( $(event.target) );
+      if(event_name === "publish"){
+        showAndHide(findPublishedStatusContainer($status_container), findUnpublishedStatusContainer($status_container) );
+      }else{
+        showAndHide( findUnpublishedStatusContainer($status_container), findPublishedStatusContainer($status_container) );
+      }
 
-   }
-   else{
-     var $target = $(event.target);
-     showAndHide( $target, $target.siblings("a:first") );
-     var $status_container = findStatusContainer( $(event.target) );
-     showAndHide(findPublishedStatusContainer($status_container), findUnpublishedStatusContainer($status_container) );
-   }
-  });
-
-  $unpublish_button.on("ajax:success", function(event, data, status, xhr) {
-   if(failureDataStatus()){
-     var $message = $("<div>")
-     var $error = $("<p>").text("Failed to unpublish. Please retry.");
-     $message.append($error);
-     $("#modal-body").append($message);
-     $('#modal').modal();
-
-
-   }else{
-     var $target = $(event.target);
-     showAndHide( $target, $target.prev("a") );
-     var $status_container = findStatusContainer( $(event.target) );
-     showAndHide( findUnpublishedStatusContainer($status_container), findPublishedStatusContainer($status_container) );
-
-     }
-  });
-
-  function failureDataStatus(data){
-    if(data.status === "failure"){
-      return true;
     }
-    return false;
+  }
 
+  function getErrorMessage(event_name){
+    if(event_name === "publish"){
+      return "Can not publish question due to following reasons"
+    }else{
+      return "Can not unpublish question due to following reasons:"
+    }
   }
 
   function showAndHide($first, $second){
