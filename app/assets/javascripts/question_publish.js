@@ -5,12 +5,13 @@ $(document).ready(function() {
 
   var $publish_button = $("[data-behavior=publish]");
   var $unpublish_button = $("[data-behavior=unpublish]");
+  var $publishUnpublishLinks = $("[data-behavior=publish], [data-behavior=unpublish]");
 
-  $("[data-behavior=publish], [data-behavior=unpublish]").on("ajax:before", function(){
+  $publishUnpublishLinks.on("ajax:before", function(){
     $(this).siblings("div:last").show();
   });
 
-  $("[data-behavior=publish], [data-behavior=unpublish]").on("ajax:complete", function(){
+  $publishUnpublishLinks.on("ajax:complete", function(){
     $(this).siblings("div:last").hide();
   });
 
