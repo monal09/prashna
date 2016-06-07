@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   before_action :check_privelage_for_editing, only: [:edit, :update]
 
   def index
-    @questions = Question.published
+    @questions = Question.published.paginate(page: params[:page]).order(created_at: :desc)
   end
 
   def new
@@ -25,15 +25,16 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answers = @question.answers.includes(:user).order(upvotes: :desc)
+    @answer = @question.answers.build
   end
 
   def edit
-    @question.associated_topics = @question.get_topics_list
   end
 
   def update
     if @question.update(question_params)
-      redirect_to question_path(@question), notice: "Question successfully edited "
+      redirect_to question_path(@question), notice: "Question successfully updated. "
     else
       render action: "edit"
     end
@@ -41,7 +42,6 @@ class QuestionsController < ApplicationController
 
   def publish
     @published = @question.publish
-    sleep 2
   end
 
   def unpublish

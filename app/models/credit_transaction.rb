@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: credit_transactions
+#
+#  id            :integer          not null, primary key
+#  amount        :float(24)        not null
+#  user_id       :integer          not null
+#  event         :integer
+#  resource_id   :integer
+#  resource_type :string(255)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_credit_transactions_on_user_id  (user_id)
+#
+
 class CreditTransaction < ActiveRecord::Base
 
   enum event: [ :ask_question, :signup, :answer_question, :buy]

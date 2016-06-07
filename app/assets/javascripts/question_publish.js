@@ -1,4 +1,3 @@
-// FIXME_AB: remove duplicacy
 $(document).ready(function() {
 
   $(".spinner").hide();
@@ -7,71 +6,71 @@ $(document).ready(function() {
   var $unpublish_button = $("[data-behavior=unpublish]");
   var $publishUnpublishLinks = $("[data-behavior=publish], [data-behavior=unpublish]");
 
-  $publishUnpublishLinks.on("ajax:before", function(){
+  $publishUnpublishLinks.on("ajax:before", function() {
     $(this).siblings("div:last").show();
   });
 
-  $publishUnpublishLinks.on("ajax:complete", function(){
+  $publishUnpublishLinks.on("ajax:complete", function() {
     $(this).siblings("div:last").hide();
   });
 
-  $publish_button.on("ajax:success", function(event, data){
+  $publish_button.on("ajax:success", function(event, data) {
     updatePublishStatus(event, data, "publish");
   });
 
-  $unpublish_button.on("ajax:success", function(event, data){
+  $unpublish_button.on("ajax:success", function(event, data) {
     updatePublishStatus(event, data, "unpublish");
   });
 
-  function updatePublishStatus( event, data, event_name ){
-    if(data.status === "failure"){
+  function updatePublishStatus(event, data, event_name) {
+    if (data.status === "failure") {
       var $all_errors = $('<div>');
       $("#modal-body").empty();
-      $(data.errors).each(function(){
-       var $error = $("<p>").text(this);
-       $all_errors.append($error);
-     });
-     $all_errors.addClass("error-txt");
-     $("#modal-body").append($all_errors);
-     var error_message = getErrorMessage(event_name);
-     $("h4.modal-title").html(error_message);
-     $('#modal').modal();
-    }else{
+      $(data.errors).each(function() {
+        var $error = $("<p>").text(this);
+        $all_errors.append($error);
+      });
+      $all_errors.addClass("error-txt");
+      $("#modal-body").append($all_errors);
+      var error_message = getErrorMessage(event_name);
+      $("h4.modal-title").html(error_message);
+      $('#modal').modal();
+    } else {
       var $target = $(event.target);
-      showAndHide( $target, $target.siblings("a:first") );
-      var $status_container = findStatusContainer( $(event.target) );
-      if(event_name === "publish"){
-        showAndHide(findPublishedStatusContainer($status_container), findUnpublishedStatusContainer($status_container) );
-      }else{
-        showAndHide( findUnpublishedStatusContainer($status_container), findPublishedStatusContainer($status_container) );
+      showAndHide($target, $target.siblings("a:first"));
+      var $status_container = findStatusContainer($(event.target));
+      if (event_name === "publish") {
+        showAndHide(findPublishedStatusContainer($status_container), findUnpublishedStatusContainer($status_container));
+      } else {
+        showAndHide(findUnpublishedStatusContainer($status_container), findPublishedStatusContainer($status_container));
       }
 
     }
   }
 
-  function getErrorMessage(event_name){
-    if(event_name === "publish"){
+  function getErrorMessage(event_name) {
+    if (event_name === "publish") {
       return "Can not publish question due to following reasons"
-    }else{
+    } else {
       return "Can not unpublish question due to following reasons:"
     }
   }
 
-  function showAndHide($first, $second){
+  function showAndHide($first, $second) {
     $first.addClass("hidden");
     $second.removeClass("hidden");
   }
 
-  function findStatusContainer($container){
+  function findStatusContainer($container) {
     return $container.parents("td:first").prev("td");
   }
 
-  function findPublishedStatusContainer($container){
+  function findPublishedStatusContainer($container) {
     return $container.children().first("a");
   }
 
-  function findUnpublishedStatusContainer($container){
+  function findUnpublishedStatusContainer($container) {
     return $container.children().last("a");
   }
 
- });
+});

@@ -3,29 +3,47 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'welcome#index'
+  root 'questions#index'
 
   get '/verification/:token', to: "users#verification", as: :account_activation
   get '/password_resets/:token', to: "password_resets#new", as: :reset_password
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
-  get '/questions/:id/publish', to: "questions#publish", as: :publish
-  get '/questions/:id/unpublish', to: "questions#unpublish", as: :unpublish
   resources :users, only: [:new, :create]
-
 
   scope :my_account do
     resources :credit_transactions, only: [:index]
     get '/questions', to: "users#myquestions", as: :myquestions
   end
 
-  resources :questions
+  resources :questions do
+    member do
+      get 'publish', to: "questions#publish", as: :publish
+      get 'unpublish', to: "questions#unpublish", as: :unpublish
+    end
+    resources :answers do
+      member do
+        get 'upvote', to: "answers#upvote", as: :upvote
+        get 'downvote', to: "answers#downvote", as: :downvote
+      end
+    end
+  end
+
+  resources :topics, only: [] do
+    member do
+      get 'questions'
+    end
+  end
+
+  controller :search do
+    get 'search', action: :create
+  end
 
   controller :session do
-    get  'login', to: :new
-    post 'login', to: :create
-    delete 'logout',to: :destroy
+    get  'login', action: :new
+    post 'login', action: :create
+    delete 'logout',action: :destroy
   end
 
   # Example of regular route:

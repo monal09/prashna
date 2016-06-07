@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: questions
+#
+#  id            :integer          not null, primary key
+#  title         :string(255)      not null
+#  content       :text(65535)      not null
+#  pdf_name      :string(255)
+#  user_id       :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  published     :boolean          default(FALSE)
+#  slug          :string(255)
+#  answers_count :integer
+#
+# Indexes
+#
+#  index_questions_on_title    (title)
+#  index_questions_on_user_id  (user_id)
+#
+
 class Question < ActiveRecord::Base
 
   attr_accessor :uploaded_file
@@ -8,7 +29,9 @@ class Question < ActiveRecord::Base
 
   has_and_belongs_to_many :topics
   has_many :credit_transactions, as: :resource
+  has_many :answers, dependent: :destroy, inverse_of: :question
   belongs_to :user
+  accepts_nested_attributes_for :answers
 
   after_save :deduct_credit_points_for_question
   after_save :add_topics
@@ -18,7 +41,9 @@ class Question < ActiveRecord::Base
   before_save :ensure_sufficient_credit_balance, if: :is_to_be_published?
 
   scope :published, -> { where(published: true) }
+  scope :search, ->(query) { published.where("lower(title) LIKE ?", "%#{query.downcase}%")}
 
+  self.per_page = 4
 
   def is_to_be_published?
     published? && !published_was
@@ -49,6 +74,7 @@ class Question < ActiveRecord::Base
     self.published = false
     save
   end
+
 
   private
 

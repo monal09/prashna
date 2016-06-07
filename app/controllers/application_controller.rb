@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include PermissionHelper
 
-  helper_method :current_user, :signed_in?
+  helper_method :current_user, :signed_in?, :get_topics
 
   def current_user
     @current_user ||= find_logged_in_user
@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
 
   def signed_in?
     !!current_user
+  end
+
+  def get_topics
+    Topic.all
   end
 
   protected

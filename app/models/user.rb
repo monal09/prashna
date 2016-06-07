@@ -1,3 +1,31 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                              :integer          not null, primary key
+#  first_name                      :string(255)      not null
+#  last_name                       :string(255)      not null
+#  email                           :string(255)      not null
+#  password_digest                 :string(255)      not null
+#  admin                           :boolean          default(FALSE)
+#  verification_token              :string(255)
+#  verification_token_expiry_at    :datetime
+#  verified_at                     :datetime
+#  forgot_password_token           :string(255)
+#  forgot_password_token_expiry_at :datetime
+#  remember_me_token               :string(255)
+#  created_at                      :datetime         not null
+#  updated_at                      :datetime         not null
+#  credit_balance                  :float(24)        default(0.0), not null
+#  lock_version                    :integer
+#
+# Indexes
+#
+#  index_users_on_forgot_password_token  (forgot_password_token)
+#  index_users_on_remember_me_token      (remember_me_token)
+#  index_users_on_verification_token     (verification_token)
+#
+
 class User < ActiveRecord::Base
 
   attr_accessor :validate_password
@@ -6,6 +34,7 @@ class User < ActiveRecord::Base
 
   has_many :credit_transactions, dependent: :destroy
   has_many :questions, dependent: :nullify
+  has_many :answers, dependent: :nullify, inverse_of: :user
 
   validates :first_name, :last_name, presence: true
   validates :email, uniqueness: {case_sensitive: false}, format: {

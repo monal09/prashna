@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160530064223) do
+ActiveRecord::Schema.define(version: 20160606120052) do
+
+  create_table "answers", force: :cascade do |t|
+    t.string   "content",     limit: 255
+    t.integer  "user_id",     limit: 4
+    t.integer  "question_id", limit: 4
+    t.integer  "upvotes",     limit: 4,   default: 0
+    t.integer  "downvotes",   limit: 4,   default: 0
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
+  add_index "answers", ["user_id"], name: "index_answers_on_user_id", using: :btree
 
   create_table "credit_transactions", force: :cascade do |t|
     t.float    "amount",        limit: 24,  null: false
@@ -26,14 +39,15 @@ ActiveRecord::Schema.define(version: 20160530064223) do
   add_index "credit_transactions", ["user_id"], name: "index_credit_transactions_on_user_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
-    t.string   "title",      limit: 255,                   null: false
-    t.text     "content",    limit: 65535,                 null: false
-    t.string   "pdf_name",   limit: 255
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
-    t.boolean  "published",                default: false
-    t.string   "slug",       limit: 255
+    t.string   "title",         limit: 255,                   null: false
+    t.text     "content",       limit: 65535,                 null: false
+    t.string   "pdf_name",      limit: 255
+    t.integer  "user_id",       limit: 4
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.boolean  "published",                   default: false
+    t.string   "slug",          limit: 255
+    t.integer  "answers_count", limit: 4
   end
 
   add_index "questions", ["title"], name: "index_questions_on_title", using: :btree
@@ -78,5 +92,17 @@ ActiveRecord::Schema.define(version: 20160530064223) do
   add_index "users", ["forgot_password_token"], name: "index_users_on_forgot_password_token", using: :btree
   add_index "users", ["remember_me_token"], name: "index_users_on_remember_me_token", using: :btree
   add_index "users", ["verification_token"], name: "index_users_on_verification_token", using: :btree
+
+  create_table "votes", force: :cascade do |t|
+    t.integer  "votable_id",   limit: 4
+    t.string   "votable_type", limit: 255
+    t.boolean  "upvote",                   null: false
+    t.integer  "user_id",      limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "votes", ["user_id"], name: "index_votes_on_user_id", using: :btree
+  add_index "votes", ["votable_type", "votable_id"], name: "index_votes_on_votable_type_and_votable_id", using: :btree
 
 end

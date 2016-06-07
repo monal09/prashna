@@ -1,7 +1,15 @@
-<body class =<% if(!signed_in?)%> "homepage-image-background" <%end%>>	
+<body class =<% if(!signed_in?)%> "homepage-image-background" <%end%>>
 	<div>
 		<% if !(signed_in?)%>
 		<%=render :template => "session/new"%>
-		<% end %>
+		<% else %>
+		<div class = "col-sm-offset-2 col-sm-7">
+			Recent Stories for you
+		</div>
+		<div class = "col-sm-offset-2 col-sm-7 ">
+			<%= render @questions%>
+			<%= will_paginate @questions, renderer: BootstrapPagination::Rails %>
+		</div>
+			<% end %>
 	</div>
 </body>

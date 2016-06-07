@@ -1,21 +1,22 @@
-<div class="col-md-offset-1 col-md-7">
+<div class="col-md-offset-1 col-md-7" >
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3><%= @question.title %></h3>
+      <%if @question.draft? %>
+      <h6 class="text-right"> <b>This question is in draft state</b></h6>
+      <%end%>
     </div>
     <div class="panel-body">
-      <%= @question.content %>
+      <%= simple_format @question.content %>
     </div>
     <div class="panel-body">
       <b>TOPICS:</b><%= render @question.topics %>
     </div>
     <div class="panel-footer">
-      <div class="col-xs-6 col-sm-2"><%= link_to 'Answer',"#" %>  </div>
+      <div class="col-xs-6 col-sm-2"><%= link_to 'Answer',"#"%>  </div>
       <div class="col-xs-6 col-sm-3"><%= link_to 'Mark offesnive', "#" %>   </div>
       <div class="col-xs-6 col-sm-2"><%= link_to 'Comment', "#" %>   </div>
       <div class="col-xs-6 col-sm-4">
-
-
         <% if can_edit_question?(@question,current_user) %>
         <%= link_to 'Edit', edit_question_path(@question) %>
         <% end %>
@@ -23,7 +24,12 @@
     </div>
   </div>
   </br >
-  <div>
-    <h3>ANSWERS</h3>
+  <% if @question.published%>
+  <div data-behavior = "answers">
+    <h3><%= @question.answers_count%> ANSWERS</h3>
+    <%= render @answers%>
   </div>
+  
+   <%= render :template => "answers/new" %>
+   <%end%>
 </div>
