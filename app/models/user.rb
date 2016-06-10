@@ -32,10 +32,6 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  has_many :credit_transactions, dependent: :destroy
-  has_many :questions, dependent: :nullify
-  has_many :answers, dependent: :nullify, inverse_of: :user
-
   validates :first_name, :last_name, presence: true
   validates :email, uniqueness: {case_sensitive: false}, format: {
     with: REGEXP[:email_validator],
@@ -43,14 +39,20 @@ class User < ActiveRecord::Base
   }
 
   validates :password, length: {minimum: 6}, if: "validate_password.present?"
+  
+  has_many :credit_transactions, dependent: :destroy
+  has_many :questions, dependent: :nullify
+  has_many :answers, dependent: :nullify, inverse_of: :user
+  has_many :transactions
+  has_many :orders
+  has_many :comments, dependent: :nullify, inverse_of: :user
+
+  scope :verified, -> {where.not(verified_at: nil)}
 
   before_create :generate_verification_token, if: "!admin?"
   before_create :auto_verify_email, if: "admin?"
   before_validation :set_validate_password, on: :create
   after_commit :send_verification_mail, on: :create
-
-
-  scope :verified, -> {where.not(verified_at: nil)}
 
   def verify!
     self.transaction do

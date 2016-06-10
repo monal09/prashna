@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
 
   before_action :set_question, only: [:show, :edit, :update, :publish, :unpublish]
-  before_action :authenticate, except: :show
+  before_action :authenticate, except: [:show, :index]
   before_action :check_visibilty, only: :show
   before_action :check_privelage_for_editing, only: [:edit, :update]
 
@@ -25,8 +25,9 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answers = @question.answers.includes(:user).order(upvotes: :desc)
+    @answers = @question.answers.includes(:user, :comments).order(upvotes: :desc)
     @answer = @question.answers.build
+    @comment = Comment.new
   end
 
   def edit

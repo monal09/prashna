@@ -1,0 +1,21 @@
+<div class="item  col-xs-4 col-lg-4">
+    <div class="thumbnail">
+        <%=image_tag("dollar.jpeg", alt: "Buy Credits", class: "group list-group-image")%>
+        <div class="caption">
+            <h4 class="group inner list-group-item-heading">
+            <%=credit.amount%> CREDITS</h4>
+            <p class="group inner list-group-item-text">
+            Now you can buy <strong><%=credit.amount%> credits</strong> for just <strong>$ <%=credit.price%>.</strong> Click Buy Now to add credits to your wallet.</p>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <p class="lead">
+                    <% #FIXME_AB:  use number_to_currency for dispaying price ; done-%>
+                    <%=number_to_currency( credit.price )%></p>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <%= link_to "Buy Now", new_credit_charge_path(credit), class: "btn btn-success"%>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

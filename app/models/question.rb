@@ -30,6 +30,7 @@ class Question < ActiveRecord::Base
   has_and_belongs_to_many :topics
   has_many :credit_transactions, as: :resource
   has_many :answers, dependent: :destroy, inverse_of: :question
+  has_many :comments, dependent: :destroy, as: :commentable
   belongs_to :user
   accepts_nested_attributes_for :answers
 

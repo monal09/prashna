@@ -24,6 +24,7 @@ class Answer < ActiveRecord::Base
 
   after_save :reward_credits
   has_many :votes, as: :votable
+  has_many :comments, as: :commentable
   belongs_to :question, counter_cache: true
   belongs_to :user
 

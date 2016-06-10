@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160606120052) do
+ActiveRecord::Schema.define(version: 20160608142026) do
 
   create_table "answers", force: :cascade do |t|
     t.string   "content",     limit: 255
@@ -26,6 +26,18 @@ ActiveRecord::Schema.define(version: 20160606120052) do
   add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
   add_index "answers", ["user_id"], name: "index_answers_on_user_id", using: :btree
 
+  create_table "comments", force: :cascade do |t|
+    t.integer  "user_id",          limit: 4
+    t.integer  "commentable_id",   limit: 4
+    t.string   "commentable_type", limit: 255
+    t.text     "comment",          limit: 65535
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "comments", ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
   create_table "credit_transactions", force: :cascade do |t|
     t.float    "amount",        limit: 24,  null: false
     t.integer  "user_id",       limit: 4,   null: false
@@ -37,6 +49,24 @@ ActiveRecord::Schema.define(version: 20160606120052) do
   end
 
   add_index "credit_transactions", ["user_id"], name: "index_credit_transactions_on_user_id", using: :btree
+
+  create_table "credits", force: :cascade do |t|
+    t.integer  "amount",     limit: 4,                null: false
+    t.decimal  "price",                precision: 10, null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.integer  "user_id",       limit: 4
+    t.float    "price",         limit: 24
+    t.integer  "credit_amount", limit: 4
+    t.integer  "status",        limit: 4,  default: 0
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.string   "title",         limit: 255,                   null: false
@@ -70,6 +100,24 @@ ActiveRecord::Schema.define(version: 20160606120052) do
   end
 
   add_index "topics", ["name"], name: "index_topics_on_name", using: :btree
+
+  create_table "transactions", force: :cascade do |t|
+    t.integer  "user_id",            limit: 4,                  null: false
+    t.string   "charge_id",          limit: 255,                null: false
+    t.string   "stripe_token",       limit: 255,                null: false
+    t.decimal  "amount",                         precision: 10, null: false
+    t.string   "currency",           limit: 255,                null: false
+    t.string   "stripe_customer_id", limit: 255,                null: false
+    t.string   "description",        limit: 255,                null: false
+    t.string   "stripe_email",       limit: 255,                null: false
+    t.string   "stripe_token_type",  limit: 255,                null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.integer  "order_id",           limit: 4
+  end
+
+  add_index "transactions", ["order_id"], name: "index_transactions_on_order_id", using: :btree
+  add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "first_name",                      limit: 255,                 null: false

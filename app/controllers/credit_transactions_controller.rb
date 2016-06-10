@@ -1,4 +1,5 @@
 class CreditTransactionsController < ApplicationController
+ 
  before_action :authenticate
  
  def index

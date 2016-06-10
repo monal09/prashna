@@ -11,3 +11,4 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 Rails.application.config.assets.precompile += %w( question_publish.js )
 Rails.application.config.assets.precompile += %w( vote_counts.js )
+Rails.application.config.assets.precompile += %w( comments.js )

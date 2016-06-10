@@ -29,6 +29,13 @@ Rails.application.routes.draw do
       end
     end
   end
+  
+  resources :comments, only: [:new, :create]
+
+  resources :credits, only: [:new, :create] do
+    resources :charges, only: [:new, :create]
+  end
+
 
   resources :topics, only: [] do
     member do

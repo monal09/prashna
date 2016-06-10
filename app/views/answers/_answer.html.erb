@@ -1,7 +1,7 @@
 <% content_for :head do%>
-  <%= javascript_include_tag 'vote_counts' %>
+<%= javascript_include_tag 'vote_counts' %>
 <%end%>
-<div class="answer-box">
+<div class="answer-box"data-behavior="answer">
 	<p><%= simple_format answer.content %></p>
 	
 	<%= link_to image_tag("upvote.gif", border: 0, class: 'dock-item'), upvote_question_answer_path( answer.question, answer, format: :json), remote: true, data: {behavior: "upvoteSymbol"}, class: 'dock-item'	%>
@@ -10,7 +10,13 @@
 		<span class = "text-success" data-behavior="upvoteCount">Upvotes: <%= answer.upvotes%> </span>&nbsp;
 		<span class="text-warning" data-behavior="downvoteCount">Downvotes: <%= answer.downvotes%></span>
 	</p>
+	<div><%= link_to "Add Comment", new_comment_path, remote: true, data: {behavior: "new_comment_link", resourceType: "Answer", resourceId: answer.id}%></div>
 	<p class="text-right light-text">
 		<small>Answered on: <strong><%= answer.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= answer.user ? answer.user.first_name : "user deleted"%>	</strong>
 	</p>
+	
+	<div data-behavior="comments">
+		<h3>Comments</h3>
+		<%= render answer.comments.includes(:user).order(created_at: :desc)%>
+	</div>
 </div>
