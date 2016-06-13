@@ -1,6 +1,6 @@
 function Comment(container) {
   this.$container = container;
-  this.$comments = container.find("[data-behavior=new_comment_link]");
+  this.$new_comment_link = container.find("[data-behavior=new_comment_link]");
   this.$commentModal = $('#comment-modal');
   this.$commentForm = this.$commentModal.find("#new_comment");
   this.$userCommentBox = $("#comment_comment");
@@ -8,23 +8,24 @@ function Comment(container) {
 
 }
 
-Comment.prototype.submitCommentForm = function(event, data) {
-  
+Comment.prototype.handleCommentFormResponse = function(event, data) {
+
   if( data.status == "success"){
     var $comment = $("<blockquote>");
     var $contentBox = $("<p>");
     var $commentorsDetailBox = $("<small>");
+    // FIXME_AB: why we need to find this again
     var $commentModal = $("#comment-modal");
-  
+
     $contentBox.text(data.comment);
     $commentorsDetailBox.text("by " + data.user_name);
     $comment.append($contentBox, $commentorsDetailBox);
-  
+
     $commentModal.modal("toggle");
-  
+
     var resourceType = "[data-resourcetype=" + data.commentable_type + "]";
     var resourceId = "[data-resourceid=" + data.commentable_id + "]";
-  
+
     $answer = $(resourceType + resourceId);
     $commentBox = $answer.parent().siblings("[data-behavior=comments]");
     $commentBox.append($comment);
@@ -42,7 +43,7 @@ Comment.prototype.showCommentForm = function(event, data) {
   this.$userCommentBox.val("");
   var $commentableType = this.$commentModal.find("#comment_commentable_type");
   var $commentableId = this.$commentModal.find("#comment_commentable_id");
-  
+
   $commentableType.val(type);
   $commentableId.val(type_id);
   this.$commentModal.modal();
@@ -53,10 +54,10 @@ Comment.prototype.init = function() {
   var _this = this;
 
   this.$commentForm.on("ajax:success", function(event, data) {
-    _this.submitCommentForm(event, data);
+    _this.handleCommentFormResponse(event, data);
   });
 
-  this.$comments.on("ajax:success", function(event, data) {
+  this.$new_comment_link.on("ajax:success", function(event, data) {
     _this.showCommentForm(event, data);
   });
 }

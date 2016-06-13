@@ -11,6 +11,6 @@
 
 #FIXME_AB: change name to CreditPack 
 class Credit < ActiveRecord::Base
-	#FIXME_AB: add validations; done
+	#FIXME_AB: add validations
 	validates :amount, :price, presence: true
 end

@@ -18,15 +18,14 @@
 class Order < ActiveRecord::Base
 
 	enum status: [:pending, :processed]
-	
+
+	#FIXME_AB: add other validations on price and credit_amount
 	validates :credit_amount, :price, presence: true
 	validates :user, presence: true
 
-	#FIXME_AB: pending; done
 	scope :pending, -> { where( status: :pending)}
-	
+
 	belongs_to :user
-	#FIXME_AB: dependent?; done
 	has_many :transactions, dependent: :destroy
 
 	after_create :create_credit_transaction
@@ -37,5 +36,5 @@ class Order < ActiveRecord::Base
     user.credit_transactions.buy_credit_points.create!(amount: credit_amount, resource_id: id, resource_type: self.class)
 	end
 
-	
+
 end

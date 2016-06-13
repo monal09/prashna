@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
 
   before_action :authenticate
-   before_action :check_commentable_validity, only: :create
+  before_action :check_commentable_validity, only: :create
 
   def new
     @comment = Comment.new

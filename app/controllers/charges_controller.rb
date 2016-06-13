@@ -25,7 +25,6 @@ class ChargesController < ApplicationController
       @transaction = @order.transactions.build(get_transaction_params(charge))
       @transaction.user = current_user
       @order.status = :processed
-      #FIXME_AB: need to implement refund
       if !@order.save
         Stripe::Refund.create(
           charge: charge.id

@@ -8,11 +8,12 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
-      @comment = Comment.new
     if @answer.save
       redirect_to :back, notice: "Answer successfully added."
     else
       @answers = @question.answers.order(created_at: :desc)
+      #FIXME_AB: @answer.comments.build
+      @comment = Comment.new
       flash.now[:errors] = "Couldn't save your answer, please fix the errors."
       render "questions/show"
     end
@@ -21,7 +22,6 @@ class AnswersController < ApplicationController
   def upvote
     @upvote = @answer.votes.create(upvote: true, user_id: current_user.id)
     @answer.reload
-
   end
 
   def downvote

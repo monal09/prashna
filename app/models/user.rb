@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   }
 
   validates :password, length: {minimum: 6}, if: "validate_password.present?"
-  
+
   has_many :credit_transactions, dependent: :destroy
   has_many :questions, dependent: :nullify
   has_many :answers, dependent: :nullify, inverse_of: :user
