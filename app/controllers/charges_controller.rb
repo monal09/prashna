@@ -35,6 +35,7 @@ class ChargesController < ApplicationController
   rescue Exception => e
     flash[:error] = e.message
     redirect_to new_credit_charge_path
+
   end
 
   private
@@ -58,6 +59,5 @@ class ChargesController < ApplicationController
     transaction_params[:stripe_token_type] = params[:stripeTokenType]
     transaction_params
   end
-
 
 end

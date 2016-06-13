@@ -19,8 +19,9 @@ class Order < ActiveRecord::Base
 
 	enum status: [:pending, :processed]
 
-	#FIXME_AB: add other validations on price and credit_amount
+	#FIXME_AB: add other validations on price and credit_amount; done
 	validates :credit_amount, :price, presence: true
+  validates :credit_amount, :price,  numericality: {greater_than_or_equal_to: 0.01}
 	validates :user, presence: true
 
 	scope :pending, -> { where( status: :pending)}

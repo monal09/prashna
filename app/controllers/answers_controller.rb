@@ -12,7 +12,6 @@ class AnswersController < ApplicationController
       redirect_to :back, notice: "Answer successfully added."
     else
       @answers = @question.answers.order(created_at: :desc)
-      #FIXME_AB: @answer.comments.build
       @comment = Comment.new
       flash.now[:errors] = "Couldn't save your answer, please fix the errors."
       render "questions/show"

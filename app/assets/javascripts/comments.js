@@ -14,14 +14,12 @@ Comment.prototype.handleCommentFormResponse = function(event, data) {
     var $comment = $("<blockquote>");
     var $contentBox = $("<p>");
     var $commentorsDetailBox = $("<small>");
-    // FIXME_AB: why we need to find this again
-    var $commentModal = $("#comment-modal");
-
+    // FIXME_AB: why we need to find this again; done
     $contentBox.text(data.comment);
     $commentorsDetailBox.text("by " + data.user_name);
     $comment.append($contentBox, $commentorsDetailBox);
 
-    $commentModal.modal("toggle");
+    this.$commentModal.modal("toggle");
 
     var resourceType = "[data-resourcetype=" + data.commentable_type + "]";
     var resourceId = "[data-resourceid=" + data.commentable_id + "]";
@@ -32,7 +30,6 @@ Comment.prototype.handleCommentFormResponse = function(event, data) {
   }else{
      this.$errorBox.html(data.errors);
   }
-
 }
 
 Comment.prototype.showCommentForm = function(event, data) {
@@ -41,6 +38,7 @@ Comment.prototype.showCommentForm = function(event, data) {
   var type = $target.data("resourcetype");
   var type_id = $target.data("resourceid");
   this.$userCommentBox.val("");
+  this.$errorBox.html("");
   var $commentableType = this.$commentModal.find("#comment_commentable_type");
   var $commentableId = this.$commentModal.find("#comment_commentable_id");
 

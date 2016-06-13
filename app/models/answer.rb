@@ -23,9 +23,9 @@ class Answer < ActiveRecord::Base
   validates_with QuestionPublishabilityValidator
 
   after_save :reward_credits
-  has_many :votes, as: :votable
-  #FIXME_AB: dependent? restrict
-  has_many :comments, as: :commentable
+  #FIXME_AB: dependent? restrict; done
+  has_many :votes, as: :votable, dependent: :restrict_with_error
+  has_many :comments, as: :commentable, dependent: :restrict_with_error
   belongs_to :question, counter_cache: true
   belongs_to :user
 

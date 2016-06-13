@@ -1,5 +1,9 @@
-<% #FIXME_AB: show the appropriate content in case of refund -%>
-<h2>Thanks, you paid <strong><%=number_to_currency(@credit.price)%></strong>! for your purchase of <strong><%=@credit.amount%>credits credit pack</strong></h2>
-<p> Your new balance is <%=number_to_currency(@order.user.credit_balance)%>
+<% #FIXME_AB: show the appropriate content in case of refund; done -%>
+<% if @order.errors.any? %>
+  <h2>Sorry, your order could not be processed and a refund for <%= number_to_currency(@credit.price) %> has been initiated</h2>
+<% else %>
+  <h2>Thanks, you paid <strong><%=number_to_currency(@credit.price)%></strong>! for your purchase of <strong><%=@credit.amount%>credits credit pack</strong></h2>
+  <p> Your new balance is <%=number_to_currency(@order.user.credit_balance)%>
+<%end%>
 Click here to go back
 <%= link_to "home", root_path %>
