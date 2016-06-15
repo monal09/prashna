@@ -1,5 +1,6 @@
 <% content_for :head do%>
   <%= javascript_include_tag 'comments' %>
+  <%= javascript_include_tag 'vote_counts' %>
 <%end%>
 <div class="col-md-offset-1 col-md-7" data-behavior = "question" >
   <div class="panel panel-default">
@@ -11,9 +12,11 @@
     </div>
     <div class="panel-body">
       <%= simple_format @question.content %>
-    </div>
-    <div class="panel-body">
-      <b>TOPICS:</b><%= render @question.topics %>
+
+      <b>TOPICS:</b><%= render @question.topics %></br>
+      <% if @question.pdf.present?%>
+      <%= link_to "Download PDF", @question.pdf.url %>
+      <% end%>
     </div>
     <div class="panel-footer">
       <div class="col-xs-6 col-sm-3"><%= link_to 'Mark offesnive', "#" %>   </div>
@@ -28,7 +31,7 @@
   </br >
   <div data-behavior="comments">
     <h4>Comments</h4>
-      <%= render @question.comments.includes(:user).order(created_at: :desc)%>
+      <%= render @question.comments.includes(:user).order('upvotes - downvotes')%>
   </div>
   <% if @question.published%>
   <div data-behavior = "answers">

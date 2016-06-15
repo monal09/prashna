@@ -2,6 +2,7 @@ class CommentsController < ApplicationController
 
   before_action :authenticate
   before_action :check_commentable_validity, only: :create
+  before_action :set_comment, only: [:upvote, :downvote]
 
   def new
     @comment = Comment.new
@@ -12,7 +13,23 @@ class CommentsController < ApplicationController
     @comment.save
   end
 
+  def upvote
+    #FIXME_AB: check voting throughout, need to display proper error messages. Check it for comments and ansers both; done
+    @upvote = @comment.votes.create(upvote: true, user_id: current_user.id)
+    @comment.reload
+  end
+
+  def downvote
+    @downvote = @comment.votes.create(upvote: false, user_id: current_user.id)
+    @comment.reload
+  end
+
   private
+
+  def set_comment
+    @comment = Comment.find_by(id: params[:id])
+    redirect_to root_path, notice: "no such answer exits" unless @comment
+  end
 
   def comment_params
     params.require(:comment).permit(:comment, :commentable_type, :commentable_id)

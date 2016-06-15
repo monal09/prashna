@@ -2,16 +2,21 @@
 #
 # Table name: questions
 #
-#  id            :integer          not null, primary key
-#  title         :string(255)      not null
-#  content       :text(65535)      not null
-#  pdf_name      :string(255)
-#  user_id       :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  published     :boolean          default(FALSE)
-#  slug          :string(255)
-#  answers_count :integer
+#  id               :integer          not null, primary key
+#  title            :string(255)      not null
+#  content          :text(65535)      not null
+#  pdf_name         :string(255)
+#  user_id          :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  published        :boolean          default(FALSE)
+#  slug             :string(255)
+#  answers_count    :integer
+#  pdf_file_name    :string(255)
+#  pdf_content_type :string(255)
+#  pdf_file_size    :integer
+#  pdf_updated_at   :datetime
+#  published_at     :datetime
 #
 # Indexes
 #
@@ -20,31 +25,33 @@
 #
 
 class Question < ActiveRecord::Base
+  self.per_page = 4
 
-  attr_accessor :uploaded_file
+  has_attached_file :pdf
+
   attr_accessor :associated_topics
 
   validates :title, presence: true, uniqueness: true
   validates :content, length: {minimum: 20}, presence: true
+  validates_attachment :pdf, content_type: { content_type: ["application/pdf"] },
+    size: { in: 0..2.megabytes}
+  #FIXME_AB: attachment max 2 MB, show hint to user also; done
+
 
   has_and_belongs_to_many :topics
   has_many :credit_transactions, as: :resource
   has_many :answers, dependent: :destroy, inverse_of: :question
   has_many :comments, dependent: :destroy, as: :commentable
   belongs_to :user
-  accepts_nested_attributes_for :answers
 
   after_save :deduct_credit_points_for_question
   after_save :add_topics
-  #FIXME_AB: we need to remove this after integrating paperclip
-  before_create :set_path, if: "uploaded_file.present?"
-  after_create :save_file, if: "uploaded_file.present?"
   before_save :ensure_sufficient_credit_balance, if: :is_to_be_published?
+  before_save :update_published_at, if: :is_to_be_published?
 
   scope :published, -> { where(published: true) }
   scope :search, ->(query) { published.where("lower(title) LIKE ?", "%#{query.downcase}%")}
-
-  self.per_page = 4
+  scope :published_after_reload, ->(time) { published.where( "published_at > ?", Time.at(time.to_i) + 1)}
 
   def is_to_be_published?
     published? && !published_was
@@ -54,15 +61,16 @@ class Question < ActiveRecord::Base
     id.to_s + slugify_title
   end
 
-  def get_target
-    Rails.root.join('public','uploads','question_pdf',id.to_s)
-  end
+  #FIXME_AB: remove all code related to manual file upload ; done
 
   def draft?
     !published?
   end
 
-  def get_topics_list
+  def get_topics_list(question_params)
+    if question_params && question_params[:associated_topics]
+      return question_params[:associated_topics]
+    end
     topics.map(&:name).join(',')
   end
 
@@ -83,36 +91,13 @@ class Question < ActiveRecord::Base
     self.pdf_name = uploaded_file.original_filename.to_s
   end
 
-  def save_file
-    ensure_upload_dir
-    write_file
-  end
-
-  def write_file
-    target_file = get_target + self.pdf_name
-
-    File.open(target_file, 'wb') do |file|
-      file.write(uploaded_file.read)
-    end
-
-  end
-
-  def ensure_upload_dir
-    FileUtils.mkdir_p(get_target)
-  end
-
-
-  def delete_file
-    FileUtils.remove_dir(get_target)
-  end
-
   def slugify_title
     '-' + title.gsub(/[^0-9A-Za-z]/, '-')
   end
 
   def deduct_credit_points_for_question
     if is_to_be_published?
-      user.credit_transactions.new_question.create!(amount: (-1 * CONSTANTS["credit_required_for_asking_question"]), resource_id: id, resource_type: self.class)
+      user.credit_transactions.new_question.create!(points: (-1 * CONSTANTS["credit_required_for_asking_question"]), resource_id: id, resource_type: self.class)
     end
   end
 
@@ -131,6 +116,10 @@ class Question < ActiveRecord::Base
                        You require #{CONSTANTS['credit_required_for_asking_question']} credit point for asking question"
       false
     end
+  end
+
+  def update_published_at
+    self.published_at = Time.current
   end
 
 end

@@ -3,7 +3,7 @@
 # Table name: credit_transactions
 #
 #  id            :integer          not null, primary key
-#  amount        :float(24)        not null
+#  points        :float(24)        not null
 #  user_id       :integer          not null
 #  event         :integer
 #  resource_id   :integer
@@ -33,7 +33,7 @@ class CreditTransaction < ActiveRecord::Base
   private
 
   def update_users_credit_balance
-    user.credit_balance += amount
+    user.credit_balance += points
     user.save
   end
 

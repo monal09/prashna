@@ -43,8 +43,9 @@ class User < ActiveRecord::Base
   has_many :credit_transactions, dependent: :destroy
   has_many :questions, dependent: :nullify
   has_many :answers, dependent: :nullify, inverse_of: :user
-  has_many :transactions
-  has_many :orders
+  #FIXME_AB: lets restrict user destroy if he has any order or transaction; done
+  has_many :transactions, dependent: :restrict_with_error
+  has_many :orders, dependent: :destroy
   has_many :comments, dependent: :nullify, inverse_of: :user
 
   scope :verified, -> {where.not(verified_at: nil)}
@@ -56,7 +57,7 @@ class User < ActiveRecord::Base
 
   def verify!
     self.transaction do
-      credit_transactions.signup.create!(amount: CONSTANTS["initial_credit_amount"], resource_id: id,resource_type: self.class)
+      credit_transactions.signup.create!(points: CONSTANTS["initial_credit_points"], resource_id: id,resource_type: self.class)
       self.verified_at = Time.current
       self.verification_token = nil
       self.verification_token_expiry_at = nil

@@ -1,12 +1,19 @@
+<% content_for :head do%>
+<%= javascript_include_tag 'polling' %>
+<%end%>
 <body class =<% if(!signed_in?)%> "homepage-image-background" <%end%>>
 	<div>
 		<% if !(signed_in?)%>
 		<%=render :template => "session/new"%>
-		<%= get_display_message( params[:controller] ) %>
 		<% else %>
 		<div class = "col-sm-offset-2 col-sm-7">
+			<%= get_display_message( params[:controller] ) %>
 		</div>
-		<div class = "col-sm-offset-2 col-sm-7 ">
+		<div class = "col-sm-offset-2 col-sm-7 hidden well" data-behavior= "questionsNotification">
+			<span data-behavior="newQuestionCount"></span>
+			<span><%=link_to "Click here to reload", url_for(params)%></span>
+		</div>
+		<div class = "col-sm-offset-2 col-sm-7" data-behavior= "questionsContainer" data-time= <%= @questions.first.published_at.to_i%> data-target= <%= new_question_loader_questions_path %> data-filter= <%= get_filter( params)%> >
 			<%= render @questions%>
 			<%= will_paginate @questions, renderer: BootstrapPagination::Rails %>
 		</div>

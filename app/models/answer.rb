@@ -23,15 +23,16 @@ class Answer < ActiveRecord::Base
   validates_with QuestionPublishabilityValidator
 
   after_save :reward_credits
-  #FIXME_AB: dependent? restrict; done
+  after_commit :send_notification_mail, on: :create
+  
   has_many :votes, as: :votable, dependent: :restrict_with_error
   has_many :comments, as: :commentable, dependent: :restrict_with_error
   belongs_to :question, counter_cache: true
   belongs_to :user
 
   def recalculate_vote_count!
-    self.upvotes = votes.upvotes_count.size
-    self.downvotes = votes.downvotes_count.size
+    self.upvotes = votes.upvotes.size
+    self.downvotes = votes.downvotes.size
     save!
   end
 
@@ -43,9 +44,9 @@ class Answer < ActiveRecord::Base
     previous_downvotes = get_previous_value(:downvotes)
     net_vote_was = previous_upvotes - previous_downvotes
     if net_vote >= CONSTANTS["net_votes_for_credit"] && net_vote_was < CONSTANTS["net_votes_for_credit"]
-      user.credit_transactions.answer_question.create!(amount: CONSTANTS["credit_for_good_answers"], resource_id: id, resource_type: self.class)
+      user.credit_transactions.answer_question.create!(points: CONSTANTS["credit_for_good_answers"], resource_id: id, resource_type: self.class)
     elsif net_vote < CONSTANTS["net_votes_for_credit"] && net_vote_was >= CONSTANTS["net_votes_for_credit"]
-      user.credit_transactions.answer_question.create!(amount: -1 * CONSTANTS["credit_for_good_answers"], resource_id: id, resource_type: self.class)
+      user.credit_transactions.answer_question.create!(points: -1 * CONSTANTS["credit_for_good_answers"], resource_id: id, resource_type: self.class)
     end
   end
 
@@ -60,6 +61,10 @@ class Answer < ActiveRecord::Base
       end
     end
     previous_votes
+  end
+
+  def send_notification_mail
+    UserNotifier.new_answer_posted(self).deliver_now
   end
 
 

@@ -1,0 +1,9 @@
+<h1>New answer posted</h1>
+
+<p>
+  Dear <%= @user.first_name %>,
+
+  Welcome to prashna
+  </br>
+  A new answer has been posted to the question <%=link_to question_url(@answer.question), question_url(@answer.question)  %>
+</p>

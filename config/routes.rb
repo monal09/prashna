@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   end
 
   resources :questions do
+    collection do
+      post 'new_question_loader'
+    end
     member do
       get 'publish', to: "questions#publish", as: :publish
       get 'unpublish', to: "questions#unpublish", as: :unpublish
@@ -29,8 +32,13 @@ Rails.application.routes.draw do
       end
     end
   end
-  
-  resources :comments, only: [:new, :create]
+
+  resources :comments, only: [:new, :create] do
+    member do
+      get 'upvote'
+      get 'downvote'
+    end
+  end
 
   resources :credits, only: [:new, :create] do
     resources :charges, only: [:new, :create]

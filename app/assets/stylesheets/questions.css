@@ -1,0 +1,23 @@
+.answer-box{
+	border-top: solid thin  #cfc4c2;
+	background: #f9fed9;
+	padding: 20px;
+	margin: 15px;
+}
+
+.dock-item{
+	width: 30px;
+	height: 30px;
+}
+
+.small-dock-item{
+	width: 20px;
+	height: 20px;
+}
+
+.comments{
+	margin: 20px;
+	background: #effcec;
+	border: 1px solid #afffe0;
+	padding: 15px;
+}

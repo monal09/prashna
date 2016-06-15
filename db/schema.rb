@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160608142026) do
+ActiveRecord::Schema.define(version: 20160614130055) do
 
   create_table "answers", force: :cascade do |t|
     t.string   "content",     limit: 255
@@ -31,15 +31,17 @@ ActiveRecord::Schema.define(version: 20160608142026) do
     t.integer  "commentable_id",   limit: 4
     t.string   "commentable_type", limit: 255
     t.text     "comment",          limit: 65535
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.integer  "upvotes",          limit: 4,     default: 0, null: false
+    t.integer  "downvotes",        limit: 4,     default: 0, null: false
   end
 
   add_index "comments", ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "credit_transactions", force: :cascade do |t|
-    t.float    "amount",        limit: 24,  null: false
+    t.float    "points",        limit: 24,  null: false
     t.integer  "user_id",       limit: 4,   null: false
     t.integer  "event",         limit: 4
     t.integer  "resource_id",   limit: 4
@@ -51,7 +53,7 @@ ActiveRecord::Schema.define(version: 20160608142026) do
   add_index "credit_transactions", ["user_id"], name: "index_credit_transactions_on_user_id", using: :btree
 
   create_table "credits", force: :cascade do |t|
-    t.integer  "amount",     limit: 4,                null: false
+    t.integer  "points",     limit: 4,                null: false
     t.decimal  "price",                precision: 10, null: false
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
@@ -60,7 +62,7 @@ ActiveRecord::Schema.define(version: 20160608142026) do
   create_table "orders", force: :cascade do |t|
     t.integer  "user_id",       limit: 4
     t.float    "price",         limit: 24
-    t.integer  "credit_amount", limit: 4
+    t.integer  "credit_points", limit: 4
     t.integer  "status",        limit: 4,  default: 0
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
@@ -69,15 +71,20 @@ ActiveRecord::Schema.define(version: 20160608142026) do
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
-    t.string   "title",         limit: 255,                   null: false
-    t.text     "content",       limit: 65535,                 null: false
-    t.string   "pdf_name",      limit: 255
-    t.integer  "user_id",       limit: 4
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.boolean  "published",                   default: false
-    t.string   "slug",          limit: 255
-    t.integer  "answers_count", limit: 4
+    t.string   "title",            limit: 255,                   null: false
+    t.text     "content",          limit: 65535,                 null: false
+    t.string   "pdf_name",         limit: 255
+    t.integer  "user_id",          limit: 4
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.boolean  "published",                      default: false
+    t.string   "slug",             limit: 255
+    t.integer  "answers_count",    limit: 4
+    t.string   "pdf_file_name",    limit: 255
+    t.string   "pdf_content_type", limit: 255
+    t.integer  "pdf_file_size",    limit: 4
+    t.datetime "pdf_updated_at"
+    t.datetime "published_at"
   end
 
   add_index "questions", ["title"], name: "index_questions_on_title", using: :btree

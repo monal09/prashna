@@ -1,11 +1,11 @@
 function VoteCount(container) {
 	this.$container = container;
-	this.$upvoteDownvoteSymbol = container.find("[data-behavior=upvoteSymbol], [data-behavior=downvoteSymbol]");
+	// this.$upvoteDownvoteSymbol = container.find("[data-behavior=upvoteSymbol], [data-behavior=downvoteSymbol]");
 }
 
 VoteCount.prototype.init = function() {
 	var _this = this;
-	this.$upvoteDownvoteSymbol.on("ajax:success", function(event, data) {
+	this.$container.on("ajax:success", "[data-behavior=upvoteSymbol], [data-behavior=downvoteSymbol]",  function(event, data) {
 		if (data.status === "failure") {
 			_this.displayErrors($(data.errors))		
 		} else {
@@ -35,9 +35,7 @@ VoteCount.prototype.updateVotes = function($target, upvotes, downvotes) {
 	$downvoteCountDisplay.html("Downvotes: " + downvotes);
 }
 
-
-
 $(document.ready = function() {
-	var voteCount = new VoteCount($("[data-behavior=answers]"));
+	var voteCount = new VoteCount($("[data-behavior=question]"));
 	voteCount.init();
 });

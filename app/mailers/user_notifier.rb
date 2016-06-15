@@ -12,4 +12,11 @@ class UserNotifier < ApplicationMailer
     mail to: @user.email, subject: 'Prashna, Password reset instructions'
   end
 
+  def new_answer_posted( answer )
+    @answer = answer
+    @user = answer.question.user
+    #FIXME_AB: which question? ; done
+    mail to: @user.email, subject: "New answer posted to your question #{ @answer.question.title }"
+  end
+
 end

@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     if user && user.valid_verification_token?
       user.verify!
       sign_in(user)
-      flash[:notice] = "You have been successfully logged in and #{CONSTANTS["initial_credit_amount"]} credits have been added to your account"
+      flash[:notice] = "You have been successfully logged in and #{CONSTANTS["initial_credit_points"]} credits have been added to your account"
     else
       flash[:notice] = "Invalid verification token"
     end

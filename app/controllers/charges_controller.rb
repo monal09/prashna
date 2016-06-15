@@ -7,7 +7,7 @@ class ChargesController < ApplicationController
   end
 
   def create
-    @order = current_user.orders.pending.build(price: @credit.price, credit_amount: @credit.amount )
+    @order = current_user.orders.pending.build(price: @credit.price, credit_points: @credit.points )
 
     customer = Stripe::Customer.create(
       :email => current_user.email,

@@ -5,19 +5,19 @@ function Comment(container) {
   this.$commentForm = this.$commentModal.find("#new_comment");
   this.$userCommentBox = $("#comment_comment");
   this.$errorBox = this.$commentForm.find("#errors_div");
-
 }
 
+// FIXME_AB: when comment is added no voteup vote down links;done
 Comment.prototype.handleCommentFormResponse = function(event, data) {
 
   if( data.status == "success"){
     var $comment = $("<blockquote>");
     var $contentBox = $("<p>");
     var $commentorsDetailBox = $("<small>");
-    // FIXME_AB: why we need to find this again; done
-    $contentBox.text(data.comment);
+    $contentBox.html(data.comment);
     $commentorsDetailBox.text("by " + data.user_name);
-    $comment.append($contentBox, $commentorsDetailBox);
+    
+    $comment.append($contentBox, $commentorsDetailBox, $(data.comment_display));
 
     this.$commentModal.modal("toggle");
 
@@ -27,6 +27,7 @@ Comment.prototype.handleCommentFormResponse = function(event, data) {
     $answer = $(resourceType + resourceId);
     $commentBox = $answer.parent().siblings("[data-behavior=comments]");
     $commentBox.append($comment);
+    $commentBox.find("[data-behaviour=no-comments-block]").hide();
   }else{
      this.$errorBox.html(data.errors);
   }

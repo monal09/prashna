@@ -3,7 +3,7 @@ class TopicsController < ApplicationController
   before_action :set_topic, only: :questions
 
   def questions
-    @questions = @topic.questions.published.paginate(:page => params[:page]).order(created_at: :desc)
+    @questions = @topic.questions.published.paginate(:page => params[:page]).order(published_at: :desc)
     render :template => "questions/index"
   end
 

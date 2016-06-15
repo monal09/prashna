@@ -15,6 +15,8 @@ gem 'jquery-rails'
 # Use mysql2 as the database for Active Record
 gem 'mysql2'
 
+gem 'paperclip', '~> 4.2'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
 

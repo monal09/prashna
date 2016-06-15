@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   before_action :check_privelage_for_editing, only: [:edit, :update]
 
   def index
-    @questions = Question.published.paginate(page: params[:page]).order(created_at: :desc)
+    @questions = Question.published.paginate(page: params[:page]).order(published_at: :desc)
   end
 
   def new
@@ -15,7 +15,8 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.new(question_params)
-
+    #FIXME_AB: uploaded file is not visible; done
+    #FIXME_AB: if question is not saved, topics do not appear in form; done
     if @question.save
       redirect_to question_path(@question), notice: "Question successfully added"
     else
@@ -25,7 +26,8 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answers = @question.answers.includes(:user, :comments).order(upvotes: :desc)
+    #FIXME_AB: comment ordering is diffenent fix it.;done
+    @answers = @question.answers.order(upvotes: :desc)
     @answer = @question.answers.build
     @comment = Comment.new
   end
@@ -49,11 +51,32 @@ class QuestionsController < ApplicationController
     @unpublished = @question.unpublish
   end
 
+  def new_question_loader
+    if params[:filter].present?
+      filter_type = params[:filter].split("+").first
+      filter_parameter = params[:filter].split("+").last
+      @questions = find_new_questions(filter_type, filter_parameter)
+    else
+      @questions = Question.published_after_reload(params[:time])
+    end
+
+  end
+
+  def find_new_questions( filter_type, filter_parameter)
+    if filter_type == "search_query"
+      @questions =  Question.published_after_reload(params[:time]).search(filter_parameter)
+    elsif filter_type == "topic"
+      @topic = Topic.find_by(id: filter_parameter.to_i)
+      @questions = @topic.questions.published_after_reload(params[:time])
+    end
+    return @questions
+  end
+
 
   private
 
   def question_params
-    params.require(:question).permit(:title, :content, :published, :uploaded_file, :associated_topics)
+    params.require(:question).permit(:title, :content, :published, :pdf, :associated_topics)
   end
 
   def check_visibilty

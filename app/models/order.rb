@@ -5,7 +5,7 @@
 #  id            :integer          not null, primary key
 #  user_id       :integer
 #  price         :float(24)
-#  credit_amount :integer
+#  credit_points :integer
 #  status        :integer          default(0)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
@@ -19,9 +19,9 @@ class Order < ActiveRecord::Base
 
 	enum status: [:pending, :processed]
 
-	#FIXME_AB: add other validations on price and credit_amount; done
-	validates :credit_amount, :price, presence: true
-  validates :credit_amount, :price,  numericality: {greater_than_or_equal_to: 0.01}
+	#FIXME_AB: rename credit_points to credit_points; done
+	validates :credit_points, :price, presence: true
+  validates :credit_points, :price,  numericality: {greater_than_or_equal_to: 0.01}
 	validates :user, presence: true
 
 	scope :pending, -> { where( status: :pending)}
@@ -34,7 +34,7 @@ class Order < ActiveRecord::Base
 	private
 
 	def create_credit_transaction
-    user.credit_transactions.buy_credit_points.create!(amount: credit_amount, resource_id: id, resource_type: self.class)
+    user.credit_transactions.buy_credit_points.create!(points: credit_points, resource_id: id, resource_type: self.class)
 	end
 
 

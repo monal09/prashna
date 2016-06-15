@@ -23,8 +23,9 @@ class Vote < ActiveRecord::Base
   before_create :check_for_duplicate_existence
   after_save :update_vote_count
 
-  scope :upvotes_count, -> {where(upvote: true)}
-  scope :downvotes_count, -> {where(upvote: false)}
+  #FIXME_AB: should be upvotes and downvotes; done
+  scope :upvotes, -> {where(upvote: true)}
+  scope :downvotes, -> {where(upvote: false)}
 
   private
 
@@ -36,6 +37,7 @@ class Vote < ActiveRecord::Base
     vote = find_existing_vote
 
     if vote && vote.upvote? == self.upvote?
+      self.errors[:base] = "Same vote already casted."
       return false
     elsif vote
       vote.destroy
@@ -43,7 +45,8 @@ class Vote < ActiveRecord::Base
   end
 
   def find_existing_vote
-    Vote.find_by(votable_id: votable_id, votable_type: votable_type, user_id: user_id)
+    #FIXME_AB: try this: , done
+     votable.votes.where(user_id: user_id).first
   end
 
 end

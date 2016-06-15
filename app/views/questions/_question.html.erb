@@ -7,7 +7,7 @@
 		<p> <small><%= question.content %></small> </p>
 	</div>
 	<div>
-		<p class="text-left light-text"> <%= question.answers_count%> answers &nbsp; 0 comments	</strong>
+		<p class="text-left light-text"> <%= question.answers_count.present? ? question.answers_count : "0"%> answers &nbsp; 0 comments	</strong>
 		</p>
 		<p class="text-right light-text"> <small>Asked on: <strong><%= question.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= question.user.first_name%>	</strong>
 		</p>
