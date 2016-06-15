@@ -35,8 +35,7 @@ class Question < ActiveRecord::Base
   validates :content, length: {minimum: 20}, presence: true
   validates_attachment :pdf, content_type: { content_type: ["application/pdf"] },
     size: { in: 0..2.megabytes}
-  #FIXME_AB: attachment max 2 MB, show hint to user also; done
-
+  #FIXME_AB: use size: {max:...}
 
   has_and_belongs_to_many :topics
   has_many :credit_transactions, as: :resource
@@ -61,13 +60,12 @@ class Question < ActiveRecord::Base
     id.to_s + slugify_title
   end
 
-  #FIXME_AB: remove all code related to manual file upload ; done
-
   def draft?
     !published?
   end
 
-  def get_topics_list(question_params)
+  #FIXME_AB: no need to pass arguments
+  def get_topics_list(question_params = nil)
     if question_params && question_params[:associated_topics]
       return question_params[:associated_topics]
     end

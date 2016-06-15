@@ -15,8 +15,6 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.new(question_params)
-    #FIXME_AB: uploaded file is not visible; done
-    #FIXME_AB: if question is not saved, topics do not appear in form; done
     if @question.save
       redirect_to question_path(@question), notice: "Question successfully added"
     else
@@ -26,7 +24,6 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    #FIXME_AB: comment ordering is diffenent fix it.;done
     @answers = @question.answers.order(upvotes: :desc)
     @answer = @question.answers.build
     @comment = Comment.new
@@ -53,16 +50,19 @@ class QuestionsController < ApplicationController
 
   def new_question_loader
     if params[:filter].present?
+      #FIXME_AB: need to handle this. with two filters
       filter_type = params[:filter].split("+").first
       filter_parameter = params[:filter].split("+").last
       @questions = find_new_questions(filter_type, filter_parameter)
     else
+      #FIXME_AB: Question.published_after
       @questions = Question.published_after_reload(params[:time])
     end
 
   end
 
   def find_new_questions( filter_type, filter_parameter)
+    #FIXME_AB: merge topic and search
     if filter_type == "search_query"
       @questions =  Question.published_after_reload(params[:time]).search(filter_parameter)
     elsif filter_type == "topic"

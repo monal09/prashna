@@ -23,7 +23,6 @@ class Vote < ActiveRecord::Base
   before_create :check_for_duplicate_existence
   after_save :update_vote_count
 
-  #FIXME_AB: should be upvotes and downvotes; done
   scope :upvotes, -> {where(upvote: true)}
   scope :downvotes, -> {where(upvote: false)}
 
@@ -45,8 +44,7 @@ class Vote < ActiveRecord::Base
   end
 
   def find_existing_vote
-    #FIXME_AB: try this: , done
-     votable.votes.where(user_id: user_id).first
+    votable.votes.where(user_id: user_id).first
   end
 
 end

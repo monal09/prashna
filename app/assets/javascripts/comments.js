@@ -7,7 +7,6 @@ function Comment(container) {
   this.$errorBox = this.$commentForm.find("#errors_div");
 }
 
-// FIXME_AB: when comment is added no voteup vote down links;done
 Comment.prototype.handleCommentFormResponse = function(event, data) {
 
   if( data.status == "success"){

@@ -19,7 +19,6 @@ class Order < ActiveRecord::Base
 
 	enum status: [:pending, :processed]
 
-	#FIXME_AB: rename credit_points to credit_points; done
 	validates :credit_points, :price, presence: true
   validates :credit_points, :price,  numericality: {greater_than_or_equal_to: 0.01}
 	validates :user, presence: true

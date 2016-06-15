@@ -43,9 +43,8 @@ class User < ActiveRecord::Base
   has_many :credit_transactions, dependent: :destroy
   has_many :questions, dependent: :nullify
   has_many :answers, dependent: :nullify, inverse_of: :user
-  #FIXME_AB: lets restrict user destroy if he has any order or transaction; done
   has_many :transactions, dependent: :restrict_with_error
-  has_many :orders, dependent: :destroy
+  has_many :orders, dependent: :restrict_with_error
   has_many :comments, dependent: :nullify, inverse_of: :user
 
   scope :verified, -> {where.not(verified_at: nil)}

@@ -1,4 +1,3 @@
-<% #FIXME_AB: @order.new_record? ; done -%>
 <% if (@order.new_record?) %>
   <%= @order.errors.full_messages%>
   <h2>Sorry, your order could not be processed and a refund for <%= number_to_currency(@credit.price) %> has been initiated</h2>

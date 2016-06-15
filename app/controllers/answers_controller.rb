@@ -40,8 +40,7 @@ class AnswersController < ApplicationController
   end
 
   def set_answer
-    #FIXME_AB: first find publishable question and the find answer with question's scope; done
-    @question = Question.find_by(id: params[:question_id].to_s, published: true)
+    @question = Question.published.find_by(id: params[:question_id])
     @answer = @question.answers.where(id: params[:id]).first if @question
     redirect_to root_path, notice: "no such answer exits" unless @answer
   end

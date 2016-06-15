@@ -14,7 +14,6 @@ class CommentsController < ApplicationController
   end
 
   def upvote
-    #FIXME_AB: check voting throughout, need to display proper error messages. Check it for comments and ansers both; done
     @upvote = @comment.votes.create(upvote: true, user_id: current_user.id)
     @comment.reload
   end
