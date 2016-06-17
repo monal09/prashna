@@ -24,7 +24,6 @@ class Answer < ActiveRecord::Base
   validates_with UserPresenceValidator
   validates_with QuestionPublishabilityValidator
 
-  # before_save :check_offensive_status
   after_save :reward_credits
   after_commit :send_notification_mail, on: :create
   after_create :update_answers_count
@@ -44,6 +43,10 @@ class Answer < ActiveRecord::Base
     save!
   end
 
+  def is_credited_answer?
+    (upvotes - downvotes) >= CONSTANTS["net_votes_for_credit"]
+  end
+
   private
 
   def reward_credits
@@ -51,6 +54,7 @@ class Answer < ActiveRecord::Base
     previous_upvotes  = get_previous_value(:upvotes)
     previous_downvotes = get_previous_value(:downvotes)
     net_vote_was = previous_upvotes - previous_downvotes
+    debugger
     if net_vote >= CONSTANTS["net_votes_for_credit"] && net_vote_was < CONSTANTS["net_votes_for_credit"]
       user.credit_transactions.answer_question.create!(points: CONSTANTS["credit_for_good_answers"], resource_id: id, resource_type: self.class)
     elsif net_vote < CONSTANTS["net_votes_for_credit"] && net_vote_was >= CONSTANTS["net_votes_for_credit"]
@@ -59,8 +63,9 @@ class Answer < ActiveRecord::Base
   end
 
   def get_previous_value(type)
-    if previous_changes[type]
-      previous_votes = previous_changes[type].first
+    debugger
+    if changes[type]
+      previous_votes = changes[type].first
     else
       if type.to_s == "upvotes"
         previous_votes = upvotes

@@ -9,7 +9,7 @@ class AnswersController < ApplicationController
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
     if @answer.save
-      redirect_to :back, notice: "Answer successfully added."
+      redirect_to @question, notice: "Answer successfully added."
     else
       @answers = @question.answers.order(created_at: :desc)
       @comment = Comment.new

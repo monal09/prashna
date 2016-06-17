@@ -12,6 +12,9 @@ module CreditTransactionsHelper
       #{link_to credit_transaction.resource.question.title, question_path(credit_transaction.resource.question) rescue "-"} ".html_safe
     elsif credit_transaction.event == "buy"
       " #{ pluralize(credit_transaction.points, 'point') } credited for your purchase of $ #{ credit_transaction.resource.price} credit pack"
+    elsif credit_transaction.event == "answer_marked_abuse"
+      "#{ credit_transaction.points.abs } point #{ credit_transaction.points > 0 ? "credited" : "debited"} as your answer on question: .
+      #{link_to credit_transaction.resource.question.title, question_path(credit_transaction.resource.question) rescue "-"} has been marked offensive".html_safe
     end
   end
 

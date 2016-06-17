@@ -18,7 +18,7 @@
 
 class CreditTransaction < ActiveRecord::Base
 
-  enum event: [ :ask_question, :signup, :answer_question, :buy]
+  enum event: [ :ask_question, :signup, :answer_question, :buy, :answer_marked_abuse]
 
   belongs_to :user
   belongs_to :resource, polymorphic: true
@@ -29,6 +29,7 @@ class CreditTransaction < ActiveRecord::Base
   scope :signup, -> {where( event: :signup )}
   scope :answer_question, -> { where( event: :answer_question ) }
   scope :buy_credit_points, -> { where( event: :buy ) } 
+  scope :answer_marked_abuse, ->{ where( event: :answer_marked_abuse )}
   
   private
 

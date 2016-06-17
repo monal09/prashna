@@ -25,6 +25,7 @@ class AbuseReport < ActiveRecord::Base
   before_save :check_for_duplicate_existence
   after_save :update_abuse_reports_count
   after_save :update_reportable_count
+  after_save :revert_credit_if_necessary
 
   private
 
@@ -49,6 +50,16 @@ class AbuseReport < ActiveRecord::Base
       abuse_reportable.commentable.comments_count -= 1
       abuse_reportable.commentable.save!
     end
+  end
+
+  def revert_credit_if_necessary
+    if credit_reversal_needed?
+      abuse_reportable.user.credit_transactions.answer_marked_abuse.create!(points: -1 * CONSTANTS["credit_for_good_answers"], resource_id: abuse_reportable.id, resource_type: abuse_reportable.class )
+    end
+  end
+
+  def credit_reversal_needed?
+    abuse_reportable_type == "Answer" && abuse_reportable.is_credited_answer?
   end
 
 
