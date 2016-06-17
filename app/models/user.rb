@@ -46,6 +46,7 @@ class User < ActiveRecord::Base
   has_many :transactions, dependent: :restrict_with_error
   has_many :orders, dependent: :restrict_with_error
   has_many :comments, dependent: :nullify, inverse_of: :user
+  has_many :abuse_reports, dependent: :destroy
 
   scope :verified, -> {where.not(verified_at: nil)}
 

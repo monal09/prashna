@@ -1,7 +1,9 @@
 <% content_for :head do%>
   <%= javascript_include_tag 'comments' %>
   <%= javascript_include_tag 'vote_counts' %>
+  <%= javascript_include_tag 'abuse_reports' %>
 <%end%>
+
 <div class="col-md-offset-1 col-md-7" data-behavior = "question" >
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -19,7 +21,8 @@
       <% end%>
     </div>
     <div class="panel-footer">
-      <div class="col-xs-6 col-sm-3"><%= link_to 'Mark offesnive', "#" %>   </div>
+    <%= render partial: "abuse_reports/report", locals: { reportable: @question}%>
+
       <div class="col-xs-6 col-sm-4">
         <% if can_edit_question?(@question,current_user) %>
         <%= link_to 'Edit', edit_question_path(@question) %>
@@ -31,12 +34,12 @@
   </br >
   <div data-behavior="comments">
     <h4>Comments</h4>
-      <%= render @question.comments.includes(:user).order('upvotes - downvotes')%>
+      <%= render @question.comments.unoffensive.includes(:user).order('upvotes - downvotes')%>
   </div>
   <% if @question.published%>
   <div data-behavior = "answers">
     <h3><%= @question.answers_count%> ANSWERS</h3>
-    <%= render @answers%>
+    <%= render @answers.unoffensive%>
   </div>
   
    <%= render :template => "answers/new" %>

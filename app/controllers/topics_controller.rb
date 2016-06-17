@@ -3,7 +3,12 @@ class TopicsController < ApplicationController
   before_action :set_topic, only: :questions
 
   def questions
-    @questions = @topic.questions.published.paginate(:page => params[:page]).order(published_at: :desc)
+    # debugger
+    if params[:query].present?
+      @questions = Question.search_question_with_topic(params[:query], @topic.id).paginate(:page => params[:page]).order(published_at: :desc)
+    else
+      @questions = @topic.questions.published.paginate(:page => params[:page]).order(published_at: :desc)
+    end
     render :template => "questions/index"
   end
 

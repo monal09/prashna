@@ -24,6 +24,7 @@
           <%= form_tag( search_path, method: :get, class: "navbar-form navbar-left", role: "search") do %>
           <div class="form-group">
             <%= text_field_tag :query, params[:query], class: "form-control", placeholder: "Search" %>
+            <%= hidden_field_tag :search_topic, params[:id]%>
           </div>
           <%= submit_tag "search", class: "btn btn-default" %>
           <%end%>
@@ -33,7 +34,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Search by topic <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <% get_topics.each do |topic|%>
-                  <li><%= link_to topic.name, questions_topic_path( topic)%></li>
+                  <li><%= link_to topic.name, questions_topic_path( topic) + (params[:query] ? ("?query=" +  params[:query]) : "")%></li>
                 <%end%>
               </ul>
             </li>

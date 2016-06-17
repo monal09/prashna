@@ -13,7 +13,7 @@
 			<span data-behavior="newQuestionCount"></span>
 			<span><%=link_to "Click here to reload", url_for(params)%></span>
 		</div>
-		<div class = "col-sm-offset-2 col-sm-7" data-behavior= "questionsContainer" data-time= <%= @questions.first.published_at.to_i%> data-target= <%= new_question_loader_questions_path %> data-filter= <%= get_filter( params)%> >
+		<div class = "col-sm-offset-2 col-sm-7" data-behavior= "questionsContainer" data-time= <%= @questions.first.published_at.to_i if @questions.first%> data-target= <%= new_question_loader_questions_path %> data-filterQuestionParams= "<%=params[:query]%>" data-filterTopicParams="<%= params[:id] || params[:search_topic]%>" >
 			<%= render @questions%>
 			<%= will_paginate @questions, renderer: BootstrapPagination::Rails %>
 		</div>

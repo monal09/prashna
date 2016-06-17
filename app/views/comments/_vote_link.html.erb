@@ -4,3 +4,6 @@
 	<small><span class = "text-success" data-behavior="upvoteCount">Upvotes: <%= comment.upvotes%> </span>&nbsp;
 	<span class="text-warning" data-behavior="downvoteCount">Downvotes: <%= comment.downvotes%></span></small>
 </p>
+<span class="col-xs-6 col-sm-3" data-behavior="report_abuse_container">
+	<%= link_to 'Report abuse', abuse_reports_path(abusable_type: comment.class, abusable_id: comment.id), method: :post, remote: true, data: {behavior: "abuse_report"} %>
+</span>

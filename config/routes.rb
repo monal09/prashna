@@ -33,6 +33,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :abuse_reports
+
   resources :comments, only: [:new, :create] do
     member do
       get 'upvote'

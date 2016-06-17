@@ -5,15 +5,17 @@ $(function() {
 function updateQuestions() {
   var $questionsContainer = $("[data-behavior=questionsContainer]");
   var lastUploadTime = $questionsContainer.data("time");
-  var filter = $questionsContainer.data("filter");
   var target = $questionsContainer.data("target");
+  var filterQuestionParams = $questionsContainer.data("filterquestionparams");
+  var filterTopicParams = $questionsContainer.data("filtertopicparams");
 
   $.ajax({
     url: target,
     type: "POST",
     data: {
       time: lastUploadTime,
-      filter: filter
+      questionparams: filterQuestionParams,
+      topicparams: filterTopicParams
     },
     success: function(data) {
       if (data.newQuestions > 0) {

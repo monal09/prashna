@@ -2,21 +2,23 @@
 #
 # Table name: questions
 #
-#  id               :integer          not null, primary key
-#  title            :string(255)      not null
-#  content          :text(65535)      not null
-#  pdf_name         :string(255)
-#  user_id          :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  published        :boolean          default(FALSE)
-#  slug             :string(255)
-#  answers_count    :integer
-#  pdf_file_name    :string(255)
-#  pdf_content_type :string(255)
-#  pdf_file_size    :integer
-#  pdf_updated_at   :datetime
-#  published_at     :datetime
+#  id                  :integer          not null, primary key
+#  title               :string(255)      not null
+#  content             :text(65535)      not null
+#  pdf_name            :string(255)
+#  user_id             :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  published           :boolean          default(FALSE)
+#  slug                :string(255)
+#  answers_count       :integer
+#  pdf_file_name       :string(255)
+#  pdf_content_type    :string(255)
+#  pdf_file_size       :integer
+#  pdf_updated_at      :datetime
+#  published_at        :datetime
+#  abuse_reports_count :integer          default(0)
+#  comments_count      :integer          default(0)
 #
 # Indexes
 #
@@ -36,11 +38,14 @@ class Question < ActiveRecord::Base
   validates_attachment :pdf, content_type: { content_type: ["application/pdf"] },
     size: { in: 0..2.megabytes}
   #FIXME_AB: use size: {max:...}
+  validates_attachment_size :pdf, :less_than => 2.megabytes,
+    :unless => Proc.new {|m| m[:pdf].nil?}
 
   has_and_belongs_to_many :topics
   has_many :credit_transactions, as: :resource
   has_many :answers, dependent: :destroy, inverse_of: :question
   has_many :comments, dependent: :destroy, as: :commentable
+  has_many :abuse_reports, dependent: :destroy, as: :abuse_reportable
   belongs_to :user
 
   after_save :deduct_credit_points_for_question
@@ -49,8 +54,24 @@ class Question < ActiveRecord::Base
   before_save :update_published_at, if: :is_to_be_published?
 
   scope :published, -> { where(published: true) }
-  scope :search, ->(query) { published.where("lower(title) LIKE ?", "%#{query.downcase}%")}
-  scope :published_after_reload, ->(time) { published.where( "published_at > ?", Time.at(time.to_i) + 1)}
+  scope :search_question, ->(query) { published.where("lower(title) LIKE ?", "%#{query.downcase}%")}
+  scope :search_question_with_topic, ->(query, topic_id) { published.joins(:topics).where("lower(title) LIKE ? AND topics.id = ?", "%#{query.downcase}%", topic_id)}
+  scope :published_after, ->(time) { published.where( "published_at > ?", Time.at(time.to_i) + 1)}
+  scope :unoffensive, -> { published.where( "abuse_reports_count < ?", 1)}
+  
+
+  def self.search_by_topic_and_title(time, topic_id, question_title)
+    @questions = Question.published_after(time).search_question_with_topic(question_title, topic_id)
+  end
+
+  def self.search_by_topic(topic_id, time)
+    @topic = Topic.find_by(id: topic_id)
+    @questions = @topic.questions.published_after(time).unoffensive
+  end
+
+  def self.search_by_question(time, question_title)
+    @questions = Question.published_after(time).search_question(question_title).unoffensives
+  end
 
   def is_to_be_published?
     published? && !published_was
@@ -64,11 +85,8 @@ class Question < ActiveRecord::Base
     !published?
   end
 
-  #FIXME_AB: no need to pass arguments
-  def get_topics_list(question_params = nil)
-    if question_params && question_params[:associated_topics]
-      return question_params[:associated_topics]
-    end
+  #FIXME_AB: no need to pass arguments; doneS
+  def get_topics_list()
     topics.map(&:name).join(',')
   end
 
@@ -80,6 +98,10 @@ class Question < ActiveRecord::Base
   def unpublish
     self.published = false
     save
+  end
+
+  def not_offensive?
+    abuse_reports_count < 1
   end
 
 

@@ -2,14 +2,16 @@
 #
 # Table name: answers
 #
-#  id          :integer          not null, primary key
-#  content     :string(255)
-#  user_id     :integer
-#  question_id :integer
-#  upvotes     :integer          default(0)
-#  downvotes   :integer          default(0)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id                  :integer          not null, primary key
+#  content             :string(255)
+#  user_id             :integer
+#  question_id         :integer
+#  upvotes             :integer          default(0)
+#  downvotes           :integer          default(0)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  abuse_reports_count :integer          default(0)
+#  comments_count      :integer          default(0)
 #
 # Indexes
 #
@@ -22,13 +24,19 @@ class Answer < ActiveRecord::Base
   validates_with UserPresenceValidator
   validates_with QuestionPublishabilityValidator
 
+  # before_save :check_offensive_status
   after_save :reward_credits
   after_commit :send_notification_mail, on: :create
-  
+  after_create :update_answers_count
+
+
   has_many :votes, as: :votable, dependent: :restrict_with_error
   has_many :comments, as: :commentable, dependent: :restrict_with_error
-  belongs_to :question, counter_cache: true
+  has_many :abuse_reports, dependent: :destroy, as: :abuse_reportable
+  belongs_to :question
   belongs_to :user
+
+  scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
 
   def recalculate_vote_count!
     self.upvotes = votes.upvotes.size
@@ -65,6 +73,22 @@ class Answer < ActiveRecord::Base
 
   def send_notification_mail
     UserNotifier.new_answer_posted(self).deliver_now
+  end
+
+  def update_answers_count
+    question.answers_count += 1
+    question.save!
+  end
+
+  def is_offensive?
+    abuse_reports_count > 0
+  end
+
+  def check_offensive_status
+    if is_offensive?
+      errors[:base] = "Offensive answer can't be saved"
+      return false
+    end
   end
 
 

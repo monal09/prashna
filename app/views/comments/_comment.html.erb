@@ -1,7 +1,5 @@
 <blockquote class="blockquote">
 	<p><%= simple_format comment.comment %></p>
-	<small>by <cite title="Source Title"><%= comment.user ? comment.user.first_name : "Deleted User"%></cite></small>
-	
-	<%= render partial: "comments/vote_link", locals: { comment: comment}%>
-	
+	<small>by <cite title="Source Title"><%= comment.user ? comment.user.first_name : "Deleted User"%></cite></small>	
+	<%= render partial: "comments/vote_link", locals: { comment: comment}%>	
 </blockquote>

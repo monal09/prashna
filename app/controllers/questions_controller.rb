@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   before_action :check_privelage_for_editing, only: [:edit, :update]
 
   def index
-    @questions = Question.published.paginate(page: params[:page]).order(published_at: :desc)
+    @questions = Question.unoffensive.paginate(page: params[:page]).order(published_at: :desc)
   end
 
   def new
@@ -49,29 +49,16 @@ class QuestionsController < ApplicationController
   end
 
   def new_question_loader
-    if params[:filter].present?
-      #FIXME_AB: need to handle this. with two filters
-      filter_type = params[:filter].split("+").first
-      filter_parameter = params[:filter].split("+").last
-      @questions = find_new_questions(filter_type, filter_parameter)
+    if params[:topicparams].present? && params[:questionparams].present?
+      @questions = Question.search_by_topic_and_title(params[:time], params[:topicparams], params[:questionparams])
+    elsif params[:topicparams].present? && params[:questionparams].blank?
+      @questions = Question.search_by_topic(filter_parameter.to_i, params[:time])
+    elsif params[:topicparams].blank? && params[:questionparams].present?
+      @questions = Question.search_by_question( params[:time], params[:questionparams])
     else
-      #FIXME_AB: Question.published_after
-      @questions = Question.published_after_reload(params[:time])
+      @questions = Question.published_after(params[:time])
     end
-
   end
-
-  def find_new_questions( filter_type, filter_parameter)
-    #FIXME_AB: merge topic and search
-    if filter_type == "search_query"
-      @questions =  Question.published_after_reload(params[:time]).search(filter_parameter)
-    elsif filter_type == "topic"
-      @topic = Topic.find_by(id: filter_parameter.to_i)
-      @questions = @topic.questions.published_after_reload(params[:time])
-    end
-    return @questions
-  end
-
 
   private
 

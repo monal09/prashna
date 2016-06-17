@@ -1,0 +1,7 @@
+<span class="col-xs-6 col-sm-3" data-behavior="report_abuse_container">
+	<% if reportable.abuse_reports.where(user_id: current_user.id).first%>
+	  <p class="text-danger">Marked Abuse</p>
+	<%else%>
+	<%= link_to 'Report abuse', abuse_reports_path(abusable_type: reportable.class, abusable_id: reportable.id), method: :post, remote: true, data: {behavior: "abuse_report"} %>
+	<%end%>
+</span>

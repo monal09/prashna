@@ -37,7 +37,7 @@
           <div class="form-group">
             <%= f.label :associated_topics, "Topic", class: "col-md-2 control-label" %>
             <div class="col-md-8">
-              <%= f.text_field :associated_topics, class: "form-control", placeholder: "Topics", value: @question.get_topics_list(params[:question]) %>
+              <%= f.text_field :associated_topics, class: "form-control", placeholder: "Topics", value: (params[:question][:associated_topics] if params[:question]) || @question.get_topics_list() %>
               <small>You can enter multiple comma separated topics.</small>
             </div>
           </div>
