@@ -11,7 +11,7 @@
 #  updated_at          :datetime         not null
 #  published           :boolean          default(FALSE)
 #  slug                :string(255)
-#  answers_count       :integer
+#  answers_count       :integer          default(0)
 #  pdf_file_name       :string(255)
 #  pdf_content_type    :string(255)
 #  pdf_file_size       :integer
