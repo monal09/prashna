@@ -11,6 +11,10 @@
       <%if @question.draft? %>
       <h6 class="text-right"> <b>This question is in draft state</b></h6>
       <%end%>
+      <%if @question.offensive? %>
+      <h6 class="text-right text-danger"> <b>This question has been marked offensive by <%=@question.abuse_reports_count%> users and hence not avialable for public viewing.</b></h6>
+      <%end%>
+
     </div>
     <div class="panel-body">
       <%= simple_format @question.content %>

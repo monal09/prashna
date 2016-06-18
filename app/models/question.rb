@@ -37,7 +37,6 @@ class Question < ActiveRecord::Base
   validates :content, length: {minimum: 20}, presence: true
   validates_attachment :pdf, content_type: { content_type: ["application/pdf"] },
     size: { in: 0..2.megabytes}
-  #FIXME_AB: use size: {max:...}
   validates_attachment_size :pdf, :less_than => 2.megabytes,
     :unless => Proc.new {|m| m[:pdf].nil?}
 
@@ -85,7 +84,6 @@ class Question < ActiveRecord::Base
     !published?
   end
 
-  #FIXME_AB: no need to pass arguments; doneS
   def get_topics_list()
     topics.map(&:name).join(',')
   end
@@ -102,6 +100,10 @@ class Question < ActiveRecord::Base
 
   def not_offensive?
     abuse_reports_count < 1
+  end
+
+  def offensive?
+    !not_offensive?
   end
 
 

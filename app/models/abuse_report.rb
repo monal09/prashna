@@ -24,13 +24,16 @@ class AbuseReport < ActiveRecord::Base
 
   before_save :check_for_duplicate_existence
   after_save :update_abuse_reports_count
-  after_save :update_reportable_count
+  after_save :update_reportable_count, if: :update_required?
   after_save :revert_credit_if_necessary
 
   private
 
+  def update_required?
+    abuse_reportable.abuse_reports_count > 0
+  end
+
   def update_abuse_reports_count
-    debugger
     abuse_reportable.abuse_reports_count += 1
     abuse_reportable.save
   end
@@ -42,6 +45,7 @@ class AbuseReport < ActiveRecord::Base
     end
   end
 
+  #FIXME_AB: need to check for the limit; done
   def update_reportable_count
     if abuse_reportable_type == "Answer"
       abuse_reportable.question.answers_count -= 1
