@@ -10,11 +10,18 @@ Rails.application.routes.draw do
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :show] do
+    member do
+      post 'follow'
+      post 'unfollow'
+    end
+  end
+
 
   scope :my_account do
     resources :credit_transactions, only: [:index]
     get '/questions', to: "users#myquestions", as: :myquestions
+    get '/followed_questions', to: "users#followed_people_questions", as: :followed_people_questions
   end
 
   resources :questions do

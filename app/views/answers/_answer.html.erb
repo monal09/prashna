@@ -9,7 +9,7 @@
 	<div><%= link_to "Add Comment", new_comment_path, remote: true, data: {behavior: "new_comment_link", resourceType: "Answer", resourceId: answer.id}%></div>
 	<%= render partial: "abuse_reports/report", locals: { reportable: answer}%>
 	<p class="text-right light-text">
-		<small>Answered on: <strong><%= answer.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= answer.user ? answer.user.first_name : "user deleted"%>	</strong>
+		<small>Answered on: <strong><%= answer.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= answer.user ? link_to(answer.user.first_name, user_path(answer.user)) : "user deleted"%>	</strong>
 	</p>
 	<div class = "comments" data-behavior="comments">
 		<h3>Comments</h3>

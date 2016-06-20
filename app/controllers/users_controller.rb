@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
-  before_action :ensure_anynomous, except: :myquestions
+  before_action :ensure_anynomous, except: [:myquestions, :show, :follow, :unfollow, :followed_people_questions]
+  before_action :set_user, only: [:show, :follow, :unfollow]
 
   def new
     @user = User.new
@@ -19,6 +20,18 @@ class UsersController < ApplicationController
 
   end
 
+  def myquestions
+    @questions = current_user.questions
+  end
+
+  def show
+    @relationship = current_user.follows.build
+  end
+
+  def followed_people_questions
+    @followers = current_user.follows
+  end
+
   def verification
     user = User.find_by(verification_token: params[:token])
     if user && user.valid_verification_token?
@@ -32,13 +45,30 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
 
-  def myquestions
-    @questions = current_user.questions
+
+  def follow
+    @relationship = current_user.follows.build(followed_id: params[:followed_id])
+    if @relationship.save
+      redirect_to user_path(params[:followed_id])
+    else
+      render "show"
+    end
   end
 
-
+  def unfollow
+    @relationship = current_user.follows.find_by(followed_id: params[:followed_id])
+    if @relationship.destroy
+      redirect_to :back
+    else
+      render "show"
+    end
+  end
 
   private
+
+  def set_user
+    @user = User.find_by(id: params[:id])
+  end
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :password, :email, :password_confirmation)

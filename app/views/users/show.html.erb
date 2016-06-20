@@ -1,0 +1,60 @@
+<%= render partial: "shared/errors", locals: {object: @relationship} %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-xs-10">
+      <div class="well panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 text-center">
+              <img src="" alt="User Image" class="center-block img-circle img-thumbnail img-responsive">
+              <ul class="list-inline ratings text-center" title="Ratings">
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+              </ul>
+            </div>
+            <!--/col-->
+            <div class="col-xs-12 col-sm-8">
+              <h2><%=@user.first_name%> <%=@user.last_name%></h2>
+              <p><strong>About: </strong> Quora User </p>
+              <p><strong>Email: </strong> <%=@user.email%></p>
+              <p><strong>Topics: </strong>
+                <span class="label label-info tags">html5</span>
+                <span class="label label-info tags">css3</span>
+                <span class="label label-info tags">jquery</span>
+                <span class="label label-info tags">bootstrap3</span>
+              </p>
+            </div>
+            <!--/col-->
+            <div class="clearfix"></div>
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong><%=@user.followed_by.size%></strong></h2>
+              <p><small>Followers</small></p>
+              <% if current_user != @user%>
+              <% if current_user.following?(@user)%>
+              <%= button_to "UnFollow", unfollow_user_path( current_user , followed_id: @user.id),class: "btn btn-danger btn-block"%>
+              <% else%>
+              <%= button_to "Follow", follow_user_path( current_user , followed_id: @user.id),class: "btn btn-success btn-block"%>
+              <% end%>
+              <%end%>
+            </div>
+            <!--/col-->
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong><%=@user.follows.size%></strong></h2>
+              <p><small>Following</small></p>
+              <!--/col-->
+              <!--/col-->
+            </div>
+            <!--/row-->
+          </div>
+          <!--/panel-body-->
+        </div>
+        <!--/panel-->
+      </div>
+      <!--/col-->
+    </div>
+    <!--/row-->
+  </div>
+  <!--/container-->

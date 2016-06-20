@@ -47,6 +47,8 @@ class User < ActiveRecord::Base
   has_many :orders, dependent: :restrict_with_error
   has_many :comments, dependent: :nullify, inverse_of: :user
   has_many :abuse_reports, dependent: :destroy
+  has_many :follows, class_name: "Relationship", foreign_key: "follower_id"
+  has_many :followed_by, class_name: "Relationship", foreign_key: "followed_id"
 
   scope :verified, -> {where.not(verified_at: nil)}
 
@@ -105,6 +107,10 @@ class User < ActiveRecord::Base
   def reset_remember_me!
     self.remember_me_token = nil
     save
+  end
+
+  def following?(other_user)
+    follows.find_by(followed_id: other_user.id)
   end
 
   protected

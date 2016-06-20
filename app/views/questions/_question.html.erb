@@ -9,7 +9,7 @@
 	<div>
 		<p class="text-left light-text"> <%= question.answers_count.present? ? question.answers_count : "0"%> answers &nbsp; <%= question.comments_count%> comments	</strong>
 		</p>
-		<p class="text-right light-text"> <small>Asked on: <strong><%= question.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= question.user.first_name%>	</strong>
+		<p class="text-right light-text"> <small>Asked on: <strong><%= question.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= link_to question.user.first_name, user_path(question.user)%>	</strong>
 		</p>
 	</div>
 </div>
