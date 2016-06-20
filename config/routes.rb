@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
-  resources :users, only: [:new, :create, :show] do
+  resources :users, only: [:new, :create, :show, :edit, :update] do
     member do
       post 'follow'
       post 'unfollow'

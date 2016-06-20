@@ -1,0 +1,48 @@
+<%= form_for @user, :html => {:class => "form-horizontal"} do |f| %>
+<%= render partial: "shared/errors", locals: {object: @user} %>
+<fieldset>
+  <legend>Sign Up</legend>
+  <div class="form-group">
+    <%= f.label :first_name, "First name", class: "col-md-2 control-label" %>
+    <div class="col-md-8">
+      <%= f.text_field :first_name, class: "form-control", placeholder: "First Name" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :last_name, "Last name", class: "col-md-2 control-label" %>
+    <div class="col-md-8">
+      <%= f.text_field :last_name, class: "form-control", placeholder: "Last Name" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :email, 'Email',class: "col-md-2 control-label" %>
+    <div class="col-md-8">
+      <%= f.text_field :email, class: "form-control", placeholder: "email" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :associated_topics, "Topic", class: "col-md-2 control-label" %>
+    <div class="col-md-8">
+      <%= f.text_field :associated_topics, class: "form-control", placeholder: "Topics", value: (params[:user][:associated_topics] if params[:user]) %>
+      <small>You can enter multiple comma separated topics.</small>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :image, "Attach image", class: "col-md-2 control-label" %>
+    <div class="col-md-8">
+      <% if @user.image.present?%>
+      You have uploaded <%= link_to @user.image_file_name, @user.image.url %>.
+      Select new file below to replace it.
+      <%end%>
+      </br>
+      <%= f.file_field :image, class: "form-control"%>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-10 col-md-offset-5">
+      <%= f.submit "Update", class: "btn btn-default btn-primary"%>
+    </div>
+  </div>
+  
+</fieldset>
+<% end %>

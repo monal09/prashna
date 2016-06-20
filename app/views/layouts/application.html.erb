@@ -46,7 +46,7 @@
                 <li><%= link_to "My questions", myquestions_path%></li>
                 <li><%= link_to "Questions by people I have followed", followed_people_questions_path%></li>
                 <li class="divider"></li>
-                <li><a href="#">Separated link</a></li>
+                <li><%= link_to "My profile", user_path( current_user)%></li>
                 <li class="divider"></li>
                 <li><%=link_to("logout", logout_path, method: :delete)%></li>
               </ul>

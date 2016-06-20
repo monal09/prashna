@@ -18,6 +18,10 @@
 #  updated_at                      :datetime         not null
 #  credit_balance                  :float(24)        default(0.0), not null
 #  lock_version                    :integer
+#  image_file_name                 :string(255)
+#  image_content_type              :string(255)
+#  image_file_size                 :integer
+#  image_updated_at                :datetime
 #
 # Indexes
 #
@@ -28,7 +32,11 @@
 
 class User < ActiveRecord::Base
 
-  attr_accessor :validate_password
+  attr_accessor :validate_password, :associated_topics
+
+  has_attached_file :image
+  validates_attachment :image,
+  content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
 
   has_secure_password
 

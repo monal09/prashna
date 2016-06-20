@@ -11,6 +11,10 @@ module PermissionHelper
     (question.user == user) || is_admin?(user)
   end
 
+  def can_edit_user?( user, current_user)
+    user == current_user || is_admin?(user)
+  end
+
   def can_view_question?( question, user )
     #FIXME_AB: admin and owner can see offensive question; done
     (question.not_offensive? && question.published?) || ((question.draft? || question.offensive?)  && question.user == user) || is_admin?(user)

@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
 
-  before_action :ensure_anynomous, except: [:myquestions, :show, :follow, :unfollow, :followed_people_questions]
-  before_action :set_user, only: [:show, :follow, :unfollow]
+  before_action :ensure_anynomous, except: [:myquestions, :show, :follow, :unfollow, :followed_people_questions, :edit, :update]
+  before_action :set_user, only: [:show, :follow, :unfollow, :edit, :update]
+  before_action :check_privelage_for_editing, only: [:edit, :update]
 
   def new
     @user = User.new
@@ -18,6 +19,17 @@ class UsersController < ApplicationController
       render action: 'new'
     end
 
+  end
+
+  def edit
+  end
+
+  def update
+    if @user.update(user_edit_params)
+      redirect_to user_path(@user), notice: "User successfully updated. "
+    else
+      render action: "edit"
+    end
   end
 
   def myquestions
@@ -72,6 +84,14 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :password, :email, :password_confirmation)
+  end
+
+  def user_edit_params
+    params.require(:user).permit(:first_name, :last_name, :email, :associated_topics, :image)
+  end
+
+  def check_privelage_for_editing
+    redirect_to root_path, notice: "You can't edit other user profile." unless  can_edit_user?(@user, current_user)
   end
 
 
