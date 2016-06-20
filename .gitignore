@@ -18,3 +18,5 @@
 .byebug_history
 config/constants.yml
 public/uploads
+public/system/users
+public/system/questions
