@@ -54,7 +54,7 @@ class Answer < ActiveRecord::Base
     previous_upvotes  = get_previous_value(:upvotes)
     previous_downvotes = get_previous_value(:downvotes)
     net_vote_was = previous_upvotes - previous_downvotes
-    debugger
+    # debugger
     if net_vote >= CONSTANTS["net_votes_for_credit"] && net_vote_was < CONSTANTS["net_votes_for_credit"]
       user.credit_transactions.answer_question.create!(points: CONSTANTS["credit_for_good_answers"], resource_id: id, resource_type: self.class)
     elsif net_vote < CONSTANTS["net_votes_for_credit"] && net_vote_was >= CONSTANTS["net_votes_for_credit"]
@@ -63,7 +63,7 @@ class Answer < ActiveRecord::Base
   end
 
   def get_previous_value(type)
-    debugger
+    # debugger
     if changes[type]
       previous_votes = changes[type].first
     else

@@ -10,22 +10,20 @@
 #
 # Indexes
 #
-#  index_relationships_on_followed_id  (followed_id)
-#  index_relationships_on_follower_id  (follower_id)
+#  index_relationships_on_followed_id                  (followed_id)
+#  index_relationships_on_follower_id                  (follower_id)
+#  index_relationships_on_follower_id_and_followed_id  (follower_id,followed_id) UNIQUE
 #
 
+#FIXME_AB: need one unique index; done
 class Relationship < ActiveRecord::Base
-  validates :follower_id, presence: true
-  validates :followed_id, presence: true
+  #FIXME_AB: validates follower followed, done
+  validates :follower, :followed, presence: true
   validates_with CanNotFollowYourselfValidator
-
 
   belongs_to :follower, class_name: "User"
   belongs_to :followed, class_name: "User"
 
-  def questions_by_followed_people
-    @questions = User.find_by(id: followed_id).questions.unoffensive
-  end
-
-
+  #FIXME_AB: not needed here, can have in questions controller quesstions/by_followings; done
+  
 end

@@ -1,6 +1,6 @@
 class AbuseReportsController < ApplicationController
 
-  #FIXME_AB: who can report
+  #FIXME_AB: who can report;done
   before_action :authenticate
   before_action :set_resource
 

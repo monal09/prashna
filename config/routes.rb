@@ -21,12 +21,13 @@ Rails.application.routes.draw do
   scope :my_account do
     resources :credit_transactions, only: [:index]
     get '/questions', to: "users#myquestions", as: :myquestions
-    get '/followed_questions', to: "users#followed_people_questions", as: :followed_people_questions
   end
 
   resources :questions do
     collection do
       post 'new_question_loader'
+    #FIXME_AB:  collection in questions controller; done
+      get 'following_people_questions'
     end
     member do
       get 'publish', to: "questions#publish", as: :publish
@@ -57,6 +58,12 @@ Rails.application.routes.draw do
   resources :topics, only: [] do
     member do
       get 'questions'
+    end
+  end
+
+  resources :user_notifications, only: [] do
+    collection do
+      post 'mark_read'
     end
   end
 

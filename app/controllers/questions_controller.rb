@@ -60,6 +60,10 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def following_people_questions
+    @questions = Question.visible.where(user_id: current_user.follow_ids)
+  end
+
   private
 
   def question_params

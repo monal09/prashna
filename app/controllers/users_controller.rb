@@ -1,8 +1,12 @@
 class UsersController < ApplicationController
 
-  before_action :ensure_anynomous, except: [:myquestions, :show, :follow, :unfollow, :followed_people_questions, :edit, :update]
-  before_action :set_user, only: [:show, :follow, :unfollow, :edit, :update]
+  #FIXME_AB: use only, would be more readable now ;done
+  before_action :ensure_anynomous, only: [:create, :new]
+  # before_action :ensure_anynomous, except: [:myquestions, :show, :follow, :unfollow, :followed_people_questions, :edit, :update]
+  before_action :set_user, only: [:show, :edit, :update]
   before_action :check_privelage_for_editing, only: [:edit, :update]
+  before_action :check_for_duplicate_relationship, only: [:follow]
+  before_action :check_for_existence, only: :unfollow 
 
   def new
     @user = User.new
@@ -18,7 +22,6 @@ class UsersController < ApplicationController
     else
       render action: 'new'
     end
-
   end
 
   def edit
@@ -37,7 +40,6 @@ class UsersController < ApplicationController
   end
 
   def show
-    @relationship = current_user.follows.build
   end
 
   def followed_people_questions
@@ -59,20 +61,25 @@ class UsersController < ApplicationController
 
 
   def follow
-    @relationship = current_user.follows.build(followed_id: params[:followed_id])
+    #FIXME_AB: users/flollow_id/follow users/id/unfollow
+    #FIXME_AB: you need a before action to check that user is not following him already. In succh case redirec to back with a message;done
+    @relationship = current_user.active_relationships.build(followed_id: params[:followed_id])
     if @relationship.save
-      redirect_to user_path(params[:followed_id])
+      #FIXME_AB: notice?;done
+      redirect_to user_path(params[:followed_id]), notice: "You are now following this user."
     else
-      render "show"
+      #FIXME_AB: redirect to back hence you won't need to have set_user;done
+      redirect_to :back, notice: "Failed to follow. Please try again later."
     end
   end
 
   def unfollow
-    @relationship = current_user.follows.find_by(followed_id: params[:followed_id])
+    #FIXME_AB: need to check if user is actually following the other user.;done
+    @relationship = current_user.active_relationships.find_by(followed_id: params[:followed_id])
     if @relationship.destroy
-      redirect_to :back
+      redirect_to :back, notice: "You have unfollowed."
     else
-      render "show"
+      redirect_to :back, notice: "Failed to un follow. Please try again later."
     end
   end
 
@@ -80,6 +87,8 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find_by(id: params[:id])
+    redirect_to root_path, notice: "No such user exists." unless @user
+    #FIXME_AB: what if not found; done
   end
 
   def user_params
@@ -92,6 +101,14 @@ class UsersController < ApplicationController
 
   def check_privelage_for_editing
     redirect_to root_path, notice: "You can't edit other user profile." unless  can_edit_user?(@user, current_user)
+  end
+
+  def check_for_duplicate_relationship
+    redirect_to root_path, notice: "You are already following this user." if current_user.follows.where(id: params[:followed_id]).exists?
+  end
+
+  def check_for_existence
+    redirect_to root_path, notice: "You don't follow any such user." unless current_user.follows.where(id: params[:followed_id]).exists?
   end
 
 

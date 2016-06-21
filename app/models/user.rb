@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
 
   has_attached_file :image
   validates_attachment :image,
-  content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
+    content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
 
   has_secure_password
 
@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
 
   validates :password, length: {minimum: 6}, if: "validate_password.present?"
 
+  has_and_belongs_to_many :topics
   has_many :credit_transactions, dependent: :destroy
   has_many :questions, dependent: :nullify
   has_many :answers, dependent: :nullify, inverse_of: :user
@@ -55,8 +56,14 @@ class User < ActiveRecord::Base
   has_many :orders, dependent: :restrict_with_error
   has_many :comments, dependent: :nullify, inverse_of: :user
   has_many :abuse_reports, dependent: :destroy
-  has_many :follows, class_name: "Relationship", foreign_key: "follower_id"
-  has_many :followed_by, class_name: "Relationship", foreign_key: "followed_id"
+  has_many :user_notifications, dependent: :destroy
+  #FIXME_AB: dependent?
+  has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+  has_many :passive_relationships, class_name:  "Relationship", foreign_key: "followed_id", dependent: :destroy
+  has_many :follows, through: :active_relationships, source: :followed, dependent: :destroy
+  has_many :followed_by, through: :passive_relationships, source: :follower, dependent: :destroy
+
+  #FIXME_AB: follows and followed_by should return collection of users; done
 
   scope :verified, -> {where.not(verified_at: nil)}
 
@@ -64,6 +71,8 @@ class User < ActiveRecord::Base
   before_create :auto_verify_email, if: "admin?"
   before_validation :set_validate_password, on: :create
   after_commit :send_verification_mail, on: :create
+  after_save :add_topics
+
 
   def verify!
     self.transaction do
@@ -118,10 +127,20 @@ class User < ActiveRecord::Base
   end
 
   def following?(other_user)
-    follows.find_by(followed_id: other_user.id)
+    #FIXME_AB: follows.exists?(other.id);done
+    follows.exists?(other_user.id)
   end
 
   protected
+
+  def add_topics
+    if associated_topics
+      current_topics = associated_topics.split(',')
+      self.topics = current_topics.map do |topic|
+        Topic.find_or_create_by(name: topic.strip)
+      end
+    end
+  end
 
   def generate_verification_token
     generate_token(:verification_token, :verification_token_expiry_at, false)

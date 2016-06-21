@@ -2,7 +2,7 @@ module PermissionHelper
   extend ActiveSupport::Concern
 
   included  do
-    helper_method :can_edit_question?, :can_view_question?
+    helper_method :can_edit_question?, :can_view_question?, :can_edit_user?
   end
 
   private
@@ -16,7 +16,6 @@ module PermissionHelper
   end
 
   def can_view_question?( question, user )
-    #FIXME_AB: admin and owner can see offensive question; done
     (question.not_offensive? && question.published?) || ((question.draft? || question.offensive?)  && question.user == user) || is_admin?(user)
   end
 

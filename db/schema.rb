@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160620062142) do
+ActiveRecord::Schema.define(version: 20160620125720) do
 
   create_table "abuse_reports", force: :cascade do |t|
     t.integer  "abuse_reportable_id",   limit: 4
@@ -73,6 +73,16 @@ ActiveRecord::Schema.define(version: 20160620062142) do
     t.datetime "updated_at",                          null: false
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "notifiable_id",   limit: 4,   null: false
+    t.string   "notifiable_type", limit: 255, null: false
+    t.string   "event",           limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "notifications", ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id", using: :btree
+
   create_table "orders", force: :cascade do |t|
     t.integer  "user_id",       limit: 4
     t.float    "price",         limit: 24
@@ -124,6 +134,7 @@ ActiveRecord::Schema.define(version: 20160620062142) do
   end
 
   add_index "relationships", ["followed_id"], name: "index_relationships_on_followed_id", using: :btree
+  add_index "relationships", ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true, using: :btree
   add_index "relationships", ["follower_id"], name: "index_relationships_on_follower_id", using: :btree
 
   create_table "topics", force: :cascade do |t|
@@ -133,6 +144,16 @@ ActiveRecord::Schema.define(version: 20160620062142) do
   end
 
   add_index "topics", ["name"], name: "index_topics_on_name", using: :btree
+
+  create_table "topics_users", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4, null: false
+    t.integer  "topic_id",   limit: 4, null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "topics_users", ["topic_id"], name: "index_topics_users_on_topic_id", using: :btree
+  add_index "topics_users", ["user_id"], name: "index_topics_users_on_user_id", using: :btree
 
   create_table "transactions", force: :cascade do |t|
     t.integer  "user_id",            limit: 4,                  null: false
@@ -151,6 +172,17 @@ ActiveRecord::Schema.define(version: 20160620062142) do
 
   add_index "transactions", ["order_id"], name: "index_transactions_on_order_id", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
+
+  create_table "user_notifications", force: :cascade do |t|
+    t.integer  "user_id",         limit: 4
+    t.integer  "notification_id", limit: 4
+    t.boolean  "read",                      default: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+  end
+
+  add_index "user_notifications", ["notification_id"], name: "index_user_notifications_on_notification_id", using: :btree
+  add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "first_name",                      limit: 255,                 null: false

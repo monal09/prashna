@@ -45,10 +45,12 @@ class Question < ActiveRecord::Base
   has_many :answers, dependent: :destroy, inverse_of: :question
   has_many :comments, dependent: :destroy, as: :commentable
   has_many :abuse_reports, dependent: :destroy, as: :abuse_reportable
+  has_many :notifications, dependent: :destroy, as: :notifiable
   belongs_to :user
 
   after_save :deduct_credit_points_for_question
   after_save :add_topics
+  after_save :create_notification, if: :is_to_be_published?
   before_save :ensure_sufficient_credit_balance, if: :is_to_be_published?
   before_save :update_published_at, if: :is_to_be_published?
 
@@ -56,7 +58,8 @@ class Question < ActiveRecord::Base
   scope :search_question, ->(query) { published.where("lower(title) LIKE ?", "%#{query.downcase}%")}
   scope :search_question_with_topic, ->(query, topic_id) { published.joins(:topics).where("lower(title) LIKE ? AND topics.id = ?", "%#{query.downcase}%", topic_id)}
   scope :published_after, ->(time) { published.where( "published_at > ?", Time.at(time.to_i) + 1)}
-  scope :unoffensive, -> { published.where( "abuse_reports_count < ?", 1)}
+  scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
+  scope :visible, -> { published.unoffensive }
   
 
   def self.search_by_topic_and_title(time, topic_id, question_title)
@@ -142,6 +145,10 @@ class Question < ActiveRecord::Base
 
   def update_published_at
     self.published_at = Time.current
+  end
+
+  def create_notification
+    notifications.create!(event: "New question posted")
   end
 
 end
