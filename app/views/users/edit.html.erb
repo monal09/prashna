@@ -1,7 +1,7 @@
 <%= form_for @user, :html => {:class => "form-horizontal"} do |f| %>
 <%= render partial: "shared/errors", locals: {object: @user} %>
 <fieldset>
-  <legend>Sign Up</legend>
+  <legend>Edit Profile</legend>
   <div class="form-group">
     <%= f.label :first_name, "First name", class: "col-md-2 control-label" %>
     <div class="col-md-8">
@@ -15,15 +15,9 @@
     </div>
   </div>
   <div class="form-group">
-    <%= f.label :email, 'Email',class: "col-md-2 control-label" %>
-    <div class="col-md-8">
-      <%= f.text_field :email, class: "form-control", placeholder: "email" %>
-    </div>
-  </div>
-  <div class="form-group">
     <%= f.label :associated_topics, "Topic", class: "col-md-2 control-label" %>
     <div class="col-md-8">
-      <%= f.text_field :associated_topics, class: "form-control", placeholder: "Topics", value: (params[:user][:associated_topics] if params[:user]) %>
+      <%= f.text_field :associated_topics, class: "form-control", placeholder: "Topics", value: (params[:question][:associated_topics] if params[:question]) || @user.get_topics_list() %>
       <small>You can enter multiple comma separated topics.</small>
     </div>
   </div>

@@ -10,6 +10,13 @@ Rails.application.routes.draw do
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
+  namespace :api, defaults: { format: :json } do
+    resources :topics, only: :show
+    get '/my_feed', to: "feeds#my_feed", as: :feed
+
+  end
+
+
   resources :users, only: [:new, :create, :show, :edit, :update] do
     member do
       post 'follow'
@@ -26,7 +33,7 @@ Rails.application.routes.draw do
   resources :questions do
     collection do
       post 'new_question_loader'
-    #FIXME_AB:  collection in questions controller; done
+      #FIXME_AB:  collection in questions controller; done
       get 'following_people_questions'
     end
     member do

@@ -26,11 +26,12 @@ class ApplicationController < ActionController::Base
   end
 
   def get_notifications
-    UserNotification.unread.where(user_id: current_user.id)
+    UserNotification.unread.includes(:user, :notification).where(user_id: current_user.id)
   end
 
-
-
+  def get_notifications_size
+    size ||= get_notifications.size
+  end
 
   protected
 

@@ -22,6 +22,7 @@
 #  image_content_type              :string(255)
 #  image_file_size                 :integer
 #  image_updated_at                :datetime
+#  authorization_token             :string(255)
 #
 # Indexes
 #
@@ -73,13 +74,13 @@ class User < ActiveRecord::Base
   after_commit :send_verification_mail, on: :create
   after_save :add_topics
 
-
   def verify!
     self.transaction do
       credit_transactions.signup.create!(points: CONSTANTS["initial_credit_points"], resource_id: id,resource_type: self.class)
       self.verified_at = Time.current
       self.verification_token = nil
       self.verification_token_expiry_at = nil
+      self.generate_authorization_token
       save
     end
   end
@@ -121,6 +122,17 @@ class User < ActiveRecord::Base
     end
   end
 
+  def generate_authorization_token
+    loop do
+      random_token = SecureRandom.hex
+      if !(User.exists?(authorization_token: random_token))
+        self.authorization_token = random_token
+        save
+        break
+      end
+    end
+  end
+
   def reset_remember_me!
     self.remember_me_token = nil
     save
@@ -129,6 +141,10 @@ class User < ActiveRecord::Base
   def following?(other_user)
     #FIXME_AB: follows.exists?(other.id);done
     follows.exists?(other_user.id)
+  end
+
+  def get_topics_list()
+    topics.map(&:name).join(',')
   end
 
   protected

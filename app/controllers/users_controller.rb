@@ -96,7 +96,7 @@ class UsersController < ApplicationController
   end
 
   def user_edit_params
-    params.require(:user).permit(:first_name, :last_name, :email, :associated_topics, :image)
+    params.require(:user).permit(:first_name, :last_name, :associated_topics, :image)
   end
 
   def check_privelage_for_editing

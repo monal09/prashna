@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160620125720) do
+ActiveRecord::Schema.define(version: 20160622070601) do
 
   create_table "abuse_reports", force: :cascade do |t|
     t.integer  "abuse_reportable_id",   limit: 4
@@ -72,6 +72,14 @@ ActiveRecord::Schema.define(version: 20160620125720) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
   end
+
+  create_table "iprecords", force: :cascade do |t|
+    t.string   "ip_address", limit: 255, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "iprecords", ["ip_address"], name: "index_iprecords_on_ip_address", using: :btree
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "notifiable_id",   limit: 4,   null: false
@@ -204,6 +212,7 @@ ActiveRecord::Schema.define(version: 20160620125720) do
     t.string   "image_content_type",              limit: 255
     t.integer  "image_file_size",                 limit: 4
     t.datetime "image_updated_at"
+    t.string   "authorization_token",             limit: 255
   end
 
   add_index "users", ["forgot_password_token"], name: "index_users_on_forgot_password_token", using: :btree

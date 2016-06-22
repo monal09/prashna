@@ -20,10 +20,9 @@
               <p><strong>About: </strong> Prashna User </p>
               <p><strong>Email: </strong> <%=@user.email%></p>
               <p><strong>Topics: </strong>
-                <span class="label label-info tags">html5</span>
-                <span class="label label-info tags">css3</span>
-                <span class="label label-info tags">jquery</span>
-                <span class="label label-info tags">bootstrap3</span>
+                <%@user.topics.each do |topic|%>
+                  <span class="label label-default tags"><%= link_to topic.name, questions_topic_path( topic)%></span>
+                <%end%> 
               </p>
             </div>
             <!--/col-->
@@ -51,9 +50,10 @@
               <h2><strong><%= link_to "Edit Profie", edit_user_path(@user)%></strong></h2>
             </div>
             <%end%>
-
-
             <!--/row-->
+          </div>
+          <div>
+            Link to view your feed:  <%= link_to api_feed_url(authorization_token: @user.authorization_token), api_feed_url(authorization_token: @user.authorization_token)%>
           </div>
           <!--/panel-body-->
         </div>
