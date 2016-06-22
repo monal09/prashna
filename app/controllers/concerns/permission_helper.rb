@@ -8,7 +8,7 @@ module PermissionHelper
   private
 
   def can_edit_question?( question, user )
-    (question.user == user) || is_admin?(user)
+    ((question.user == user) || is_admin?(user)) && (question.comments.blank? && question.answers.blank?) 
   end
 
   def can_edit_user?( user, current_user)

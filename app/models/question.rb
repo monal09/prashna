@@ -42,8 +42,8 @@ class Question < ActiveRecord::Base
 
   has_and_belongs_to_many :topics
   has_many :credit_transactions, as: :resource
-  has_many :answers, dependent: :destroy, inverse_of: :question
-  has_many :comments, dependent: :destroy, as: :commentable
+  has_many :answers, dependent: :restrict_with_error, inverse_of: :question
+  has_many :comments, dependent: :restrict_with_error, as: :commentable
   has_many :abuse_reports, dependent: :destroy, as: :abuse_reportable
   has_many :notifications, dependent: :destroy, as: :notifiable
   belongs_to :user
@@ -60,6 +60,7 @@ class Question < ActiveRecord::Base
   scope :published_after, ->(time) { published.where( "published_at > ?", Time.at(time.to_i) + 1)}
   scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
   scope :visible, -> { published.unoffensive }
+  scope :submitted_by, ->(follow_id) { where(user_id: follow_id)}
   
 
   def self.search_by_topic_and_title(time, topic_id, question_title)

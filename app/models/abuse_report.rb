@@ -30,7 +30,7 @@ class AbuseReport < ActiveRecord::Base
   private
 
   def update_required?
-    abuse_reportable.abuse_reports_count > 0
+    abuse_reportable.abuse_reports_count >= CONSTANTS["abuse_reports_for_offensive_state"]
   end
 
   def update_abuse_reports_count
@@ -45,7 +45,6 @@ class AbuseReport < ActiveRecord::Base
     end
   end
 
-  #FIXME_AB: need to check for the limit; done
   def update_reportable_count
     if abuse_reportable_type == "Answer"
       abuse_reportable.question.answers_count -= 1

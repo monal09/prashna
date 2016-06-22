@@ -33,7 +33,6 @@ Rails.application.routes.draw do
   resources :questions do
     collection do
       post 'new_question_loader'
-      #FIXME_AB:  collection in questions controller; done
       get 'following_people_questions'
     end
     member do

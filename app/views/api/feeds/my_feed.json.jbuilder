@@ -1,3 +1,4 @@
+if @user
 json.topics @topics do |topic|
   json.id topic.id
   json.name topic.name
@@ -15,4 +16,7 @@ json.topics @topics do |topic|
       end
     end 
   end
+end
+else
+  json.errors "No such user exists."
 end

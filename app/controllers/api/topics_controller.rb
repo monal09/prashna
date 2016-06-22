@@ -12,7 +12,7 @@ class Api::TopicsController < ApplicationController
 
   def set_topic
     @topic = Topic.find_by(name: params[:id])
-    redirect_to root_path, notice: "No such user exists" unless @topic
+    @errors = "No such topic exists." unless @topic
   end
 
   def find_ip
@@ -21,7 +21,7 @@ class Api::TopicsController < ApplicationController
 
   def check_for_request_limit
     if Iprecord.ip_requests(@ip).size > CONSTANTS["api_request_per_hour"]
-      redirect_to root_path, notice: "Your limit for requests has been reached. Please try in next hour."
+      @errors ||= "Your limit for requests has been reached. Please try again later in next hour."
     end
   end
 

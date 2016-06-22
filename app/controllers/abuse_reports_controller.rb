@@ -1,15 +1,11 @@
 class AbuseReportsController < ApplicationController
 
-  #FIXME_AB: who can report;done
   before_action :authenticate
   before_action :set_resource
 
   def create
 
-    #FIXME_AB: validate that the resource is valid for abuse, and published/; done
-    #FIXME_AB: @resource.mark_abuse(current_user); done
     @abuse_report = @resource.abuse_reports.build(user_id: current_user.id)
-    #FIXME_AB: what if not faved; done
     if !@abuse_report.save
       errors[:base] = "Failed to mark abusive. try again later"
     end

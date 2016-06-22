@@ -58,13 +58,11 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :nullify, inverse_of: :user
   has_many :abuse_reports, dependent: :destroy
   has_many :user_notifications, dependent: :destroy
-  #FIXME_AB: dependent?
   has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
   has_many :passive_relationships, class_name:  "Relationship", foreign_key: "followed_id", dependent: :destroy
   has_many :follows, through: :active_relationships, source: :followed, dependent: :destroy
   has_many :followed_by, through: :passive_relationships, source: :follower, dependent: :destroy
 
-  #FIXME_AB: follows and followed_by should return collection of users; done
 
   scope :verified, -> {where.not(verified_at: nil)}
 
@@ -139,7 +137,6 @@ class User < ActiveRecord::Base
   end
 
   def following?(other_user)
-    #FIXME_AB: follows.exists?(other.id);done
     follows.exists?(other_user.id)
   end
 

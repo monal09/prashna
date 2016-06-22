@@ -20,7 +20,6 @@ class QuestionsController < ApplicationController
     else
       render action: "new"
     end
-
   end
 
   def show
@@ -61,7 +60,7 @@ class QuestionsController < ApplicationController
   end
 
   def following_people_questions
-    @questions = Question.visible.where(user_id: current_user.follow_ids)
+    @questions = Question.visible.submitted_by(current_user.follow_ids)
   end
 
   private
@@ -84,6 +83,6 @@ class QuestionsController < ApplicationController
   end
 
   def check_privelage_for_editing
-    redirect_to root_path, notice: "Only owner of the question have editing privelages" unless  can_edit_question?(@question, current_user)
+    redirect_to root_path, notice: "Question can'tbe edited. You are either not he owner of the question or the question has associated comments and answers." unless  can_edit_question?(@question, current_user)
   end
 end

@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
 
-  #FIXME_AB: use only, would be more readable now ;done
   before_action :ensure_anynomous, only: [:create, :new]
   # before_action :ensure_anynomous, except: [:myquestions, :show, :follow, :unfollow, :followed_people_questions, :edit, :update]
   before_action :set_user, only: [:show, :edit, :update]
@@ -61,20 +60,15 @@ class UsersController < ApplicationController
 
 
   def follow
-    #FIXME_AB: users/flollow_id/follow users/id/unfollow
-    #FIXME_AB: you need a before action to check that user is not following him already. In succh case redirec to back with a message;done
     @relationship = current_user.active_relationships.build(followed_id: params[:followed_id])
     if @relationship.save
-      #FIXME_AB: notice?;done
       redirect_to user_path(params[:followed_id]), notice: "You are now following this user."
     else
-      #FIXME_AB: redirect to back hence you won't need to have set_user;done
       redirect_to :back, notice: "Failed to follow. Please try again later."
     end
   end
 
   def unfollow
-    #FIXME_AB: need to check if user is actually following the other user.;done
     @relationship = current_user.active_relationships.find_by(followed_id: params[:followed_id])
     if @relationship.destroy
       redirect_to :back, notice: "You have unfollowed."
@@ -86,9 +80,8 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    @user = User.find_by(id: params[:id])
+    @user = User.verified.find_by(id: params[:id])
     redirect_to root_path, notice: "No such user exists." unless @user
-    #FIXME_AB: what if not found; done
   end
 
   def user_params

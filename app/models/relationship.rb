@@ -15,15 +15,12 @@
 #  index_relationships_on_follower_id_and_followed_id  (follower_id,followed_id) UNIQUE
 #
 
-#FIXME_AB: need one unique index; done
 class Relationship < ActiveRecord::Base
-  #FIXME_AB: validates follower followed, done
   validates :follower, :followed, presence: true
   validates_with CanNotFollowYourselfValidator
 
   belongs_to :follower, class_name: "User"
   belongs_to :followed, class_name: "User"
 
-  #FIXME_AB: not needed here, can have in questions controller quesstions/by_followings; done
   
 end
