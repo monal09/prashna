@@ -14,6 +14,10 @@
       <%if @question.offensive? %>
       <h6 class="text-right text-danger"> <b>This question has been marked offensive by <%=@question.abuse_reports_count%> users and hence not avialable for public viewing.</b></h6>
       <%end%>
+      </ br>
+      <%if @question.admin_unpublished? %>
+       <h6 class="text-right text-danger"> <b>This question has been unpublished by admin and hence not avialable for public viewing.</b></h6>
+      <%end%>
 
     </div>
     <div class="panel-body">
@@ -38,12 +42,12 @@
   </br >
   <div data-behavior="comments">
     <h4>Comments</h4>
-      <%= render @question.comments.unoffensive.includes(:user).order('upvotes - downvotes')%>
+      <%= render @question.comments.visible.includes(:user).order('upvotes - downvotes')%>
   </div>
   <% if @question.published%>
   <div data-behavior = "answers">
     <h3><%= @question.answers_count%> ANSWERS</h3>
-    <%= render @answers.unoffensive%>
+    <%= render @answers.visible%>
   </div>
   
    <%= render :template => "answers/new" %>

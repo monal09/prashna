@@ -1,0 +1,20 @@
+<h1>Comments List</h1>
+<table class="table table-striped table-hover ">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Content</th>
+      <th>Commented By</th>
+      <th>Published at</th>
+      <th>Commentable Type</th>
+      <th>Commentable</th>
+      <th>Upvotes</th>
+      <th>Downvotes </th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render partial: "admin/comments/comment", collection: @comments%>
+  </tbody>
+</table>
+<%= will_paginate @comments, renderer: BootstrapPagination::Rails%>

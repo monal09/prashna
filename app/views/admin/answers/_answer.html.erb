@@ -1,0 +1,12 @@
+<tr>
+  <td><%=answer_counter + 1%></td>
+  <td><%=answer.content%></td>
+  <td><%=link_to answer.user.first_name, user_path(answer.user)%></td>
+  <td><%=answer.created_at%></td>
+  <td><%=link_to truncate(answer.question.title, length: 20), question_path(answer.question)%></td>
+  <td><%=answer.upvotes%></td>
+  <td><%=answer.downvotes%></td>
+  <td><%= link_to "Publish", publish_admin_answer_path(answer), method: :post if answer.admin_unpublished? %>
+    <%= link_to "Unpublish", unpublish_admin_answer_path(answer), method: :post if !answer.admin_unpublished? %>
+  </td>
+</tr>

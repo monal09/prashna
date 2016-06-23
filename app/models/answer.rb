@@ -12,6 +12,7 @@
 #  updated_at          :datetime         not null
 #  abuse_reports_count :integer          default(0)
 #  comments_count      :integer          default(0)
+#  admin_unpublished   :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -27,7 +28,8 @@ class Answer < ActiveRecord::Base
   after_save :reward_credits
   after_commit :send_notification_mail, on: :create
   after_create :update_answers_count
-
+  after_save :decrement_answer_count, if: :is_admin_unpublished?
+  after_save :increment_answer_count, if: :is_admin_published?
 
   has_many :votes, as: :votable, dependent: :restrict_with_error
   has_many :comments, as: :commentable, dependent: :restrict_with_error
@@ -36,6 +38,9 @@ class Answer < ActiveRecord::Base
   belongs_to :user
 
   scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
+  scope :admin_unpublished, -> { where(admin_unpublished: true)}
+  scope :not_admin_unpublished, -> { where(admin_unpublished: false)}
+  scope :visible, -> { unoffensive.not_admin_unpublished }
 
   def recalculate_vote_count!
     self.upvotes = votes.upvotes.size
@@ -48,6 +53,26 @@ class Answer < ActiveRecord::Base
   end
 
   private
+
+  def is_admin_unpublished?
+    admin_unpublished? && !admin_unpublished_was
+  end
+
+  def is_admin_published?
+    !admin_unpublished? && admin_unpublished_was
+  end
+
+  def decrement_answer_count
+    question.answers_count -= 1
+    question.save
+  end
+
+  def increment_answer_count
+    question.answers_count += 1
+    question.save
+  end
+
+
 
   def reward_credits
     net_vote = upvotes - downvotes
@@ -63,7 +88,6 @@ class Answer < ActiveRecord::Base
   end
 
   def get_previous_value(type)
-    # debugger
     if changes[type]
       previous_votes = changes[type].first
     else

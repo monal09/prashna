@@ -16,7 +16,7 @@ module PermissionHelper
   end
 
   def can_view_question?( question, user )
-    (question.not_offensive? && question.published?) || ((question.draft? || question.offensive?)  && question.user == user) || is_admin?(user)
+    (question.not_offensive? && question.published? && !question.admin_unpublished) || (question.user == user) || is_admin?(user)
   end
 
   def is_admin?(user)

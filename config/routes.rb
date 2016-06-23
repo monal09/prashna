@@ -5,15 +5,42 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'questions#index'
 
+  get 'admin', to: "admin#index", as: :admin_home
   get '/verification/:token', to: "users#verification", as: :account_activation
   get '/password_resets/:token', to: "password_resets#new", as: :reset_password
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
+  namespace :admin do
+    resources :users, only: [:index] do
+      member do
+        post 'enable'
+        post 'disable'
+      end
+    end
+    resources :answers, only: :index do
+      member do
+        post 'publish'
+        post 'unpublish'
+      end
+    end
+    resources :comments, only: :index do
+      member do
+        post 'publish'
+        post 'unpublish'
+      end
+    end
+    resources :questions, only: [:index, :show] do
+      member do
+        post 'publish'
+        post 'unpublish'
+      end
+    end
+  end
+
   namespace :api, defaults: { format: :json } do
     resources :topics, only: :show
     get '/my_feed', to: "feeds#my_feed", as: :feed
-
   end
 
 

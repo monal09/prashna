@@ -12,6 +12,7 @@
 #  upvotes             :integer          default(0), not null
 #  downvotes           :integer          default(0), not null
 #  abuse_reports_count :integer          default(0)
+#  admin_unpublished   :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -25,14 +26,18 @@ class Comment < ActiveRecord::Base
 
   has_many :votes, as: :votable, dependent: :restrict_with_error
   has_many :abuse_reports, dependent: :destroy, as: :abuse_reportable
-  
+
   belongs_to :commentable, polymorphic: true
   belongs_to :user
   after_create :update_comment_count
-  # before_save :ensure_not_offensive?
+  after_save :decrement_comment_count, if: :is_admin_unpublished?
+  after_save :increment_comment_count, if: :is_admin_published?
 
   # scope :unoffensive, -> { where( "abuse_reports_count > ?", CONSTANTS["abuse_reports_for_offensive_state"])}
   scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
+  scope :admin_unpublished, -> { where(admin_unpublished: true)}
+  scope :not_admin_unpublished, -> { where(admin_unpublished: false)}
+  scope :visible, -> { unoffensive.not_admin_unpublished }
 
   def recalculate_vote_count!
     self.upvotes = votes.upvotes.size
@@ -41,6 +46,16 @@ class Comment < ActiveRecord::Base
   end
 
   private
+
+  def decrement_comment_count
+    commentable.comments_count -= 1
+    commentable.save
+  end
+
+  def increment_comment_count
+    commentable.comments_count += 1
+    commentable.save
+  end
 
   def ensure_not_offensive?
     abuse_reports_count < 1
@@ -56,6 +71,14 @@ class Comment < ActiveRecord::Base
   def update_comment_count
     commentable.comments_count += 1
     commentable.save!
+  end
+
+  def is_admin_unpublished?
+    admin_unpublished? && !admin_unpublished_was
+  end
+
+  def is_admin_published?
+    !admin_unpublished? && admin_unpublished_was
   end
 
 end

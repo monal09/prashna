@@ -1,0 +1,17 @@
+<tr>
+  <td><%=comment_counter + 1%></td>
+  <td><%=comment.comment%></td>
+  <td><%=link_to comment.user.first_name, user_path(comment.user)%></td>
+  <td><%=comment.created_at%></td>
+  <td><%=comment.commentable_type%></td>
+  <% if comment.commentable_type == "Question"%>
+  <td><%=link_to truncate(comment.commentable.title, length: 20), admin_question_path(comment.commentable)%></td>
+  <%else%>
+    <td><%=truncate(comment.commentable.content, length: 20)%></td>
+    <%end%>
+  <td><%=comment.upvotes%></td>
+  <td><%=comment.downvotes%></td>
+  <td><%= link_to "Publish", publish_admin_comment_path(comment), method: :post if comment.admin_unpublished? %>
+    <%= link_to "Unpublish", unpublish_admin_comment_path(comment), method: :post if !comment.admin_unpublished? %>
+  </td>
+</tr>

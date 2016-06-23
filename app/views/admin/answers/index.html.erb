@@ -1,0 +1,19 @@
+<h1>Answers List</h1>
+<table class="table table-striped table-hover ">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Content</th>
+      <th>Answered By</th>
+      <th>Published at</th>
+      <th>Question</th>
+      <th>Upvotes</th>
+      <th>Downvotes </th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render partial: "admin/answers/answer", collection: @answers%>
+  </tbody>
+</table>
+<%= will_paginate @answers, renderer: BootstrapPagination::Rails%>

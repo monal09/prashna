@@ -62,6 +62,10 @@
                 <li><%= link_to "Questions by people I have followed", following_people_questions_questions_path%></li>
                 <li class="divider"></li>
                 <li><%= link_to "My profile", user_path( current_user)%></li>
+                <%if current_user.admin? %>
+                  <li class="divider"></li>
+                  <li><%=link_to("Admin Section", admin_home_path)%></li>
+                <%end%>
                 <li class="divider"></li>
                 <li><%=link_to("logout", logout_path, method: :delete)%></li>
               </ul>

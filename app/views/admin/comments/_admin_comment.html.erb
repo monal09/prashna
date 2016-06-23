@@ -1,0 +1,11 @@
+<blockquote class="blockquote">
+  <p><%= simple_format admin_comment.comment %></p>
+  <small>by <cite title="Source Title"><%= admin_comment.user ?  (link_to admin_comment.user.first_name, user_path(admin_comment.user)) : "Deleted User"%></cite></small> 
+  <% if admin_comment.admin_unpublished?%>
+      <b>You have unpublished this comment</b>
+      <small><%= link_to  "Click here to publish this comment", publish_admin_comment_path(admin_comment), method: :post%></small>
+    <% else%>
+      <small><b><%= link_to  "Click here to unpublish this comment", unpublish_admin_comment_path(admin_comment), method: :post%></b></small>
+    <%end%>
+  <%= render partial: "admin/comments/vote_link", locals: { comment: admin_comment}%> 
+</blockquote>

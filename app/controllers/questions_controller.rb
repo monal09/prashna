@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   before_action :check_privelage_for_editing, only: [:edit, :update]
 
   def index
-    @questions = Question.unoffensive.paginate(page: params[:page]).order(published_at: :desc)
+    @questions = Question.visible.paginate(page: params[:page]).order(published_at: :desc)
   end
 
   def new

@@ -23,6 +23,7 @@
 #  image_file_size                 :integer
 #  image_updated_at                :datetime
 #  authorization_token             :string(255)
+#  disabled                        :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -65,6 +66,7 @@ class User < ActiveRecord::Base
 
 
   scope :verified, -> {where.not(verified_at: nil)}
+  scope :enabled, -> { where(disabled: false)}
 
   before_create :generate_verification_token, if: "!admin?"
   before_create :auto_verify_email, if: "admin?"
@@ -142,6 +144,10 @@ class User < ActiveRecord::Base
 
   def get_topics_list()
     topics.map(&:name).join(',')
+  end
+
+  def enabled?
+    !disabled?
   end
 
   protected

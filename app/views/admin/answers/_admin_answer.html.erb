@@ -1,0 +1,25 @@
+<div class="answer-box" data-behavior="answer">
+  <p><%= simple_format admin_answer.content %></p>
+  <p data-behavior = "voteCount">
+    <span class = "text-success" data-behavior="upvoteCount">Upvotes: <%= admin_answer.upvotes%> </span>&nbsp;
+    <span class="text-warning" data-behavior="downvoteCount">Downvotes: <%= admin_answer.downvotes%></span>
+  </p>
+  <p class="text-right light-text">
+    <small>answered on: <strong><%= admin_answer.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= admin_answer.user ? link_to(admin_answer.user.first_name, user_path(admin_answer.user)) : "user deleted"%> </strong>
+  </p>
+   <% if admin_answer.admin_unpublished?%>
+      <b>You have unpublished this answer</b>
+      <%= link_to  "Click here to publish this answer", publish_admin_answer_path(admin_answer), method: :post%>
+    <% else%>
+      <b><%= link_to  "Click here to unpublish this answer", unpublish_admin_answer_path(admin_answer), method: :post%></b>
+    <%end%>
+  <div class = "comments" data-behavior="comments">
+    <h3>Comments</h3>
+    <%comments = admin_answer.comments.visible.includes(:user).order('upvotes - downvotes DESC') -%>
+    <% if comments.present?-%>
+          <%= render partial: "admin/comments/admin_comment", collection: admin_answer.comments.visible.includes(:user).order('upvotes - downvotes')%>
+    <%else%>
+    <p data-behaviour = 'no-comments-block'>No comments yet.</p>
+    <%end%>
+  </div>
+</div>

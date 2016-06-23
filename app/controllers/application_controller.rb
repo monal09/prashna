@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include PermissionHelper
 
+  before_action :log_out_disabled_user
   helper_method :current_user, :signed_in?, :get_topics, :get_notifications
 
   def current_user
@@ -14,6 +15,13 @@ class ApplicationController < ActionController::Base
     if !(signed_in?)
       redirect_to root_path
       flash[:notice] = "Please login to continue"
+    end
+  end
+
+  def log_out_disabled_user
+    if signed_in? && current_user.disabled?
+      reset_session
+      redirect_to root_path, notice: "Your account has been disabled."
     end
   end
 

@@ -19,6 +19,7 @@
 #  published_at        :datetime
 #  abuse_reports_count :integer          default(0)
 #  comments_count      :integer          default(0)
+#  admin_unpublished   :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -59,7 +60,9 @@ class Question < ActiveRecord::Base
   scope :search_question_with_topic, ->(query, topic_id) { published.joins(:topics).where("lower(title) LIKE ? AND topics.id = ?", "%#{query.downcase}%", topic_id)}
   scope :published_after, ->(time) { published.where( "published_at > ?", Time.at(time.to_i) + 1)}
   scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
-  scope :visible, -> { published.unoffensive }
+  scope :admin_unpublished, -> { where(admin_unpublished: true)}
+  scope :not_admin_unpublished, -> { where(admin_unpublished: false)}
+  scope :visible, -> { published.unoffensive.not_admin_unpublished }
   scope :submitted_by, ->(follow_id) { where(user_id: follow_id)}
   
 

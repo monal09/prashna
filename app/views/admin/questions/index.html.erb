@@ -1,0 +1,19 @@
+<h1>Questions List</h1>
+<table class="table table-striped table-hover ">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Published by</th>
+      <th>Answers</th>
+      <th>Comments</th>
+      <th>Published at</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render partial: "admin/questions/question", collection: @questions%>
+    
+  </tbody>
+</table>
+    <%= will_paginate @questions, renderer: BootstrapPagination::Rails%>

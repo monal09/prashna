@@ -1,0 +1,11 @@
+<tr>
+  <td><%=question_counter + 1%></td>
+  <td><%=link_to truncate(question.title, length: 20), question_path(question)%></td>
+  <td><%=link_to question.user.first_name, user_path(question.user)%></td>
+  <td><%=question.answers_count%></td>
+  <td><%=question.comments_count%></td>
+  <td><%=question.created_at%></td>
+  <td><%= link_to "Publish", publish_admin_question_path(question), method: :post if question.admin_unpublished? %>
+    <%= link_to "Unpublish", unpublish_admin_question_path(question), method: :post if !question.admin_unpublished? %>
+  </td>
+</tr>

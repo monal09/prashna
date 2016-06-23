@@ -1,0 +1,47 @@
+<% content_for :head do%>
+<%= javascript_include_tag 'comments' %>
+<%= javascript_include_tag 'vote_counts' %>
+<%= javascript_include_tag 'abuse_reports' %>
+<%end%>
+<div class="col-md-offset-1 col-md-7" data-behavior = "question" >
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3><%= @question.title %></h3>
+      <%if @question.offensive? %>
+      <h6 class="text-right text-danger"> <b>This question has been marked offensive by <%=@question.abuse_reports_count%> users and hence not avialable for public viewing.</b></h6>
+      <%end%>
+      </ br>
+      <%if @question.admin_unpublished? %>
+      <h6 class="text-right text-danger"> <b>This question has been unpublished by admin and hence not avialable for public viewing.</b></h6>
+      <%end%>
+    </div>
+    <div class="panel-body">
+      <%= simple_format @question.content %>
+      <b>TOPICS:</b><%= render partial: "topics/topic", collection: @question.topics %></br>
+      <% if @question.pdf.present?%>
+      <%= link_to "Download PDF", @question.pdf.url %>
+      <% end%>
+    </div>
+    <div class="panel-footer">
+    </div>
+  </div>
+  </br >
+  <div>
+    <% if @question.admin_unpublished?%>
+      <b>You have unppublished this question</b>
+      <%= link_to  "Publish", publish_admin_question_path(@question)%>
+    <% else%>
+      <b><%= link_to  "Click here to unpublish this question", unpublish_admin_question_path(@question)%></b>
+    <%end%>
+  </div>
+  <div data-behavior="comments">
+    <h4>Comments</h4>
+    <%= render partial: "admin/comments/admin_comment", collection: @question.comments.visible.includes(:user).order('upvotes - downvotes')%>
+  </div>
+  <% if @question.published%>
+  <div data-behavior = "answers">
+    <h3><%= @question.answers_count%> ANSWERS</h3>
+    <%= render partial: "admin/answers/admin_answer", collection: @answers%>
+  </div>
+  <%end%>
+</div>

@@ -6,7 +6,7 @@ class SessionController < ApplicationController
   end
 
   def create
-    user = User.verified.where(email: params[:email]).first
+    user = User.verified.enabled.where(email: params[:email]).first
 
     if user && user.authenticate(params[:password])
       sign_in( user )
