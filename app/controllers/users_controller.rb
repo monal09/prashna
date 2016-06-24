@@ -1,11 +1,11 @@
 class UsersController < ApplicationController
 
   before_action :ensure_anynomous, only: [:create, :new]
-  # before_action :ensure_anynomous, except: [:myquestions, :show, :follow, :unfollow, :followed_people_questions, :edit, :update]
   before_action :set_user, only: [:show, :edit, :update]
   before_action :check_privelage_for_editing, only: [:edit, :update]
   before_action :check_for_duplicate_relationship, only: [:follow]
-  before_action :check_for_existence, only: :unfollow 
+  before_action :check_for_existence, only: :unfollow
+  before_action :authenticate, only: :myquestions 
 
   def new
     @user = User.new

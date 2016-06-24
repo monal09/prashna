@@ -1,5 +1,6 @@
 <div class="answer-box" data-behavior="answer">
 	<p><%= simple_format answer.content %></p>
+	<%if signed_in?%>
 	<%= link_to image_tag("upvote.gif", border: 0, class: 'dock-item'), upvote_question_answer_path( answer.question, answer, format: :json), remote: true, data: {behavior: "upvoteSymbol"}, class: 'dock-item'	%>
 	<%= link_to image_tag("thumbsdown.png", border: 0, class: 'dock-item'), downvote_question_answer_path(answer.question, answer, format: :json),remote: true, data: {behavior: "downvoteSymbol"}, class: 'dock-item'	%>
 	<p data-behavior = "voteCount">
@@ -8,6 +9,7 @@
 	</p>
 	<div><%= link_to "Add Comment", new_comment_path, remote: true, data: {behavior: "new_comment_link", resourceType: "Answer", resourceId: answer.id}%></div>
 	<%= render partial: "abuse_reports/report", locals: { reportable: answer}%>
+	<%end%>
 	<p class="text-right light-text">
 		<small>Answered on: <strong><%= answer.created_at.to_formatted_s(:long_ordinal) %></strong></small> by <strong><%= answer.user ? link_to(answer.user.first_name, user_path(answer.user)) : "user deleted"%>	</strong>
 	</p>
