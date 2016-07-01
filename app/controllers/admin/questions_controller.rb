@@ -1,13 +1,12 @@
 class Admin::QuestionsController < Admin::BaseController
 
-  include CheckAdmin
-  before_action :admin_privelage_required
   before_action :set_question, only: [:unpublish, :publish, :show]
   before_action :unpublish_if_published, only: :unpublish
   before_action :publish_if_unpublished, only: :publish
 
   def index
-    @questions = Question.published.all.paginate(page: params[:page])
+    #FIXME_AB: check log wwhere you can eager load
+    @questions = Question.published.all.includes(:user).paginate(page: params[:page])
   end
 
   def publish

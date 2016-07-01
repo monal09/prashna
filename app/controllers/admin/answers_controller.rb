@@ -1,13 +1,11 @@
 class Admin::AnswersController < Admin::BaseController
 
-  include CheckAdmin
-  before_action :admin_privelage_required
   before_action :set_answer, only: [:unpublish, :publish]
   before_action :unpublish_if_published, only: :unpublish
   before_action :publish_if_unpublished, only: :publish
 
   def index
-    @answers = Answer.all.paginate(page: params[:page])
+    @answers = Answer.all.includes(:questions, :users).paginate(page: params[:page])
   end
 
   def publish

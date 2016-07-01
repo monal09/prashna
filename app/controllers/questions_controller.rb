@@ -71,11 +71,10 @@ class QuestionsController < ApplicationController
 
   def check_visibilty
     redirect_to root_path, notice: "You are not allowed to access this question." unless can_view_question?(@question, current_user)
-
   end
 
   def set_question
-    @question = Question.find(params[:id])
+    @question = Question.find_by(id: params[:id])
     if @question.nil?
       redirect_to root_path, notice: "No such question exists"
     end

@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-xs-10">
+      <div class="well panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 text-center">
+              <%= image_tag @user.image.url, class: "center-block img-circle img-thumbnail img-responsive" %>
+              <ul class="list-inline ratings text-center" title="Ratings">
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+              </ul>
+            </div>
+            <!--/col-->
+            <div class="col-xs-12 col-sm-8">
+              <h2><%=@user.first_name%> <%=@user.last_name%></h2>
+              <p><strong>About: </strong> Prashna User </p>
+              <p><strong>Email: </strong> <%=@user.email%></p>
+              <p><strong>Topics: </strong>
+                <%@user.topics.each do |topic|%>
+                  <span class="label label-default tags"><%= link_to topic.name, questions_topic_path(topic)%></span>
+                <%end%> 
+              </p>
+            </div>
+            <!--/col-->
+            <div class="clearfix"></div>
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong><%=@user.followed_by.size%></strong></h2>
+              <p><small>Followers</small></p>
+            </div>
+            <!--/col-->
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong><%=@user.follows.size%></strong></h2>
+              <p><small>Following</small></p>
+              <!--/col-->
+              <!--/col-->
+            </div>
+            <% if current_user == @user%>
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong><%= link_to "Edit Profie", edit_user_path(@user)%></strong></h2>
+            </div>
+            <%end%>
+            <!--/row-->
+          </div>
+          <div>
+            Link to view your feed:  <%= link_to api_feed_url(authorization_token: @user.authorization_token), api_feed_url(authorization_token: @user.authorization_token)%>
+          </div>
+          <!--/panel-body-->
+        </div>
+        <!--/panel-->
+      </div>
+      <!--/col-->
+    </div>
+    <!--/row-->
+  </div>
+  <!--/container-->

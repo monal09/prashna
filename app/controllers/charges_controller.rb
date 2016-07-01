@@ -2,6 +2,7 @@ class ChargesController < ApplicationController
 
   before_action :authenticate
   before_action :set_credit
+  layout 'application'
 
   def new
   end

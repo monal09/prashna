@@ -33,8 +33,7 @@ class Comment < ActiveRecord::Base
   after_save :decrement_comment_count, if: :is_admin_unpublished?
   after_save :increment_comment_count, if: :is_admin_published?
 
-  # scope :unoffensive, -> { where( "abuse_reports_count > ?", CONSTANTS["abuse_reports_for_offensive_state"])}
-  scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
+  scope :unoffensive, -> { where( "abuse_reports_count > ?", CONSTANTS["abuse_reports_for_offensive_state"])}
   scope :admin_unpublished, -> { where(admin_unpublished: true)}
   scope :not_admin_unpublished, -> { where(admin_unpublished: false)}
   scope :visible, -> { unoffensive.not_admin_unpublished }

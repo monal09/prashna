@@ -1,13 +1,11 @@
 class Admin::CommentsController < Admin::BaseController
 
-  include CheckAdmin
-  before_action :admin_privelage_required
   before_action :set_comment, only: [:unpublish, :publish]
   before_action :unpublish_if_published, only: :unpublish
   before_action :publish_if_unpublished, only: :publish
 
   def index
-    @comments = Comment.all.paginate(page: params[:page])
+    @comments = Comment.all.includes(:user, :commentable).paginate(page: params[:page])
   end
 
   def publish

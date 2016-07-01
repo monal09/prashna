@@ -4,8 +4,32 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+sufficient_balance_user:
+  id: 2
+  first_name: "monal"
+  last_name: "malhotra"
+  email: "monal@vinsol.com"
+  password_digest: "111111"
+  verified_at: 2016-06-24 09:50:57
+  credit_balance: 5
+
+insufficient_balance_user:
+  id: 1
+  first_name: "mjwioe"
+  last_name: "xyz"
+  email: "monal@vinsol.com"
+  password_digest: "111111"
+  verified_at: 2016-06-24 09:50:57
+  credit_balance: 0
+
+admin_user:
+  id: 3
+  first_name: "admin"
+  last_name: "mdian"
+  email: "admin@vinsol.com"
+  password_digest: "111111"
+  admin: true
+  verified_at: 2016-06-24 09:50:57
+  credit_balance: 0 
+

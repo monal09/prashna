@@ -4,8 +4,12 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+
+correct_topic_1:
+  id: 1
+  name: Ruby
+
+correct_topic_2:
+  id: 2
+  name: Rails
+

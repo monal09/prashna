@@ -1,8 +1,6 @@
 class Admin::UsersController < Admin::BaseController
-
-  include CheckAdmin
-  before_action :admin_privelage_required
-  before_action :set_user, only: [:disable, :enable]
+  
+  before_action :set_user, only: [:disable, :enable, :show]
   before_action :ensure_not_disabling_yourself, only: :disable
 
   def index
@@ -25,6 +23,9 @@ class Admin::UsersController < Admin::BaseController
     else
       redirect_to :back, notice: "Failed to enable user"
     end
+  end
+
+  def show
   end
 
   private

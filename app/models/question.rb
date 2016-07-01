@@ -36,6 +36,7 @@ class Question < ActiveRecord::Base
 
   validates :title, presence: true, uniqueness: true
   validates :content, length: {minimum: 20}, presence: true
+  validates :user, presence: true
   validates_attachment :pdf, content_type: { content_type: ["application/pdf"] },
     size: { in: 0..2.megabytes}
   validates_attachment_size :pdf, :less_than => 2.megabytes,
@@ -59,12 +60,12 @@ class Question < ActiveRecord::Base
   scope :search_question, ->(query) { published.where("lower(title) LIKE ?", "%#{query.downcase}%")}
   scope :search_question_with_topic, ->(query, topic_id) { published.joins(:topics).where("lower(title) LIKE ? AND topics.id = ?", "%#{query.downcase}%", topic_id)}
   scope :published_after, ->(time) { published.where( "published_at > ?", Time.at(time.to_i) + 1)}
-  scope :unoffensive, -> { where( "abuse_reports_count < ?", 1)}
+  scope :unoffensive, -> { where( "abuse_reports_count < ?", CONSTANTS["abuse_reports_for_offensive_state"])}
   scope :admin_unpublished, -> { where(admin_unpublished: true)}
   scope :not_admin_unpublished, -> { where(admin_unpublished: false)}
   scope :visible, -> { published.unoffensive.not_admin_unpublished }
   scope :submitted_by, ->(follow_id) { where(user_id: follow_id)}
-  
+
 
   def self.search_by_topic_and_title(time, topic_id, question_title)
     @questions = Question.published_after(time).search_question_with_topic(question_title, topic_id)
@@ -76,7 +77,7 @@ class Question < ActiveRecord::Base
   end
 
   def self.search_by_question(time, question_title)
-    @questions = Question.published_after(time).search_question(question_title).unoffensives
+    @questions = Question.published_after(time).search_question(question_title).unoffensive
   end
 
   def is_to_be_published?
@@ -106,7 +107,7 @@ class Question < ActiveRecord::Base
   end
 
   def not_offensive?
-    abuse_reports_count < 1
+    abuse_reports_count < CONSTANTS["abuse_reports_for_offensive_state"]
   end
 
   def offensive?
@@ -115,10 +116,6 @@ class Question < ActiveRecord::Base
 
 
   private
-
-  def set_path
-    self.pdf_name = uploaded_file.original_filename.to_s
-  end
 
   def slugify_title
     '-' + title.gsub(/[^0-9A-Za-z]/, '-')

@@ -4,8 +4,26 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+unpublished_question:
+  title: "How is testing done in rails?"
+  content: "What is the procedure for testing in rails."
+  user_id: 2
+
+<% 10.times do |i|%>
+published_question_<%=i%>:
+  id: <%=i+1%>
+  title: search question with xyxy
+  content: Content for question no <%= i%>
+  published: true
+  published_at: <%= (Time.current - 1.day).to_s(:db) %>
+  user_id: 1
+  abuse_reports_count: <%= i%>
+  admin_unpublished: <%= i.even? ? true : false %>
+<%end%>
+
+draft_question_1:
+  id: 20
+  title: this is a draft question
+  content: content for a draft question is here
+  published: false
+  user_id: 2

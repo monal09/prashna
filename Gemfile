@@ -57,3 +57,6 @@ group :development do
   gem 'rails-footnotes', '~> 4.0'
 end
 
+group :test do
+  gem 'simplecov', require: false
+end
