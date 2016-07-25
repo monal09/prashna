@@ -55,9 +55,8 @@ RSpec.describe CommentsController, type: :controller do
 
   end
 
-  describe 'post#create' do
     def send_request
-      post "create", comment: build_attributes(:comment)
+      xhr :post, :create, comment: build_attributes(:comment)
     end
 
     context "user is logged in and question exists" do
@@ -70,6 +69,10 @@ RSpec.describe CommentsController, type: :controller do
       end
     end
 
+  end
+
+  describe "get#upvote" do
+    
   end
 
 

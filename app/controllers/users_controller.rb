@@ -95,9 +95,9 @@ class UsersController < ApplicationController
 
   def check_privelage_for_editing
     unless can_edit_user?(@user, current_user)
-      flash[notice] = "You can't edit other user profile."
+      flash[:notice] = "You can't edit other user profile."
       Rails.logger.info current_user.inspect
-      # redirect_to root_path and return
+      redirect_to root_path
     end
   end
 

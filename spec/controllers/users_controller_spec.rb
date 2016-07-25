@@ -11,11 +11,13 @@ RSpec.describe UsersController, type: :controller do
       get :new
     end
 
-    # it "expects before_action ensure_anynomous to be called" do
-    #   controller.class.before_action(:ensure_anynomous)
-    # end
 
     context "if user is logged in" do
+
+      # it "expects before_action ensure_anynomous to be called" do
+      #   send_request
+      #   controller.class.before_action(:ensure_anynomous)
+      # end
 
       before do
         user.save!
@@ -62,11 +64,12 @@ RSpec.describe UsersController, type: :controller do
       post :create, user: attributes_for(:invalid_user)
     end
 
-    #   it "expects before_action ensure_anynomous to be called" do
-    #     controller.class.before_action(:ensure_anynomous)
-    #   end
-
     context 'if user is logged in' do
+
+      # it "expects before_action ensure_anynomous to be called" do
+      #   send_request_with_valid_attributes
+      #   controller.class.before_action(:ensure_anynomous)
+      # end
 
       before do
         user.save!
@@ -143,13 +146,15 @@ RSpec.describe UsersController, type: :controller do
       get :edit, id: created_user.id
     end
 
-    # it "expects before_action set_user to be called" do
-    #   controller.class.before_action(:set_user)
-    # end
+    it "expects before_action set_user to be called" do
+      send_request
+      controller.class.before_action(:set_user)
+    end
 
-    # it "expects before_action check_privelage_for_editing to be called" do
-    #   controller.class.before_action(:check_privelage_for_editing)
-    # end
+    it "expects before_action check_privelage_for_editing to be called" do
+      send_request
+      controller.class.before_action(:check_privelage_for_editing)
+    end
 
     context "user is not allowed to edit/logged in" do
 
