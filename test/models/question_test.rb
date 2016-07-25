@@ -44,6 +44,7 @@ class QuestionTest < ActiveSupport::TestCase
     assert_difference("question.topics.size", difference = 3) do
       question.save
     end
+    
     assert question.topics.find_by(name: "ruby").persisted?
     assert question.topics.find_by(name: "rails").persisted?
     assert question.topics.find_by(name: "java").persisted?

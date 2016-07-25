@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :ensure_anynomous, only: [:create, :new]
   before_action :set_user, only: [:show, :edit, :update]
   before_action :check_privelage_for_editing, only: [:edit, :update]
-  before_action :check_for_duplicate_relationship, only: [:follow]
+  before_action :check_for_duplicate_relationship, only: :follows
   before_action :check_for_existence, only: :unfollow
   before_action :authenticate, only: :myquestions 
 
@@ -24,6 +24,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    puts 'hello'
   end
 
   def update
@@ -93,7 +94,11 @@ class UsersController < ApplicationController
   end
 
   def check_privelage_for_editing
-    redirect_to root_path, notice: "You can't edit other user profile." unless  can_edit_user?(@user, current_user)
+    unless can_edit_user?(@user, current_user)
+      flash[notice] = "You can't edit other user profile."
+      Rails.logger.info current_user.inspect
+      # redirect_to root_path and return
+    end
   end
 
   def check_for_duplicate_relationship

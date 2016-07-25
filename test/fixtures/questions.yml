@@ -19,6 +19,7 @@ published_question_<%=i%>:
   user_id: 1
   abuse_reports_count: <%= i%>
   admin_unpublished: <%= i.even? ? true : false %>
+  answers_count: <%= 2 if i == 1%>
 <%end%>
 
 draft_question_1:

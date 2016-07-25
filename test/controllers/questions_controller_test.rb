@@ -74,8 +74,8 @@ class QuestionsControllerTest < ActionController::TestCase
 
   test "should not show edit page to non logged in user" do
   	get :edit, { id: questions(:published_question_8)}
-  	assert_response :302
-  	assert_redirected_to root_path, ""
+  	assert_response 302
+  	assert_redirected_to root_path, "Anonymous user is able to edit question."
   end
 
 end

@@ -42,10 +42,10 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  validates :first_name, :last_name, presence: true
+  validates :first_name, :last_name, :email, presence: true
   validates :email, uniqueness: {case_sensitive: false}, format: {
     with: REGEXP[:email_validator],
-    message: "Invalid email"
+    message: "Invalid"
   }
 
   validates :password, length: {minimum: 6}, if: "validate_password.present?"
@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :nullify, inverse_of: :user
   has_many :abuse_reports, dependent: :destroy
   has_many :user_notifications, dependent: :destroy
-  has_many :active_relationships, class_name: "Relationshi p", foreign_key: "follower_id", dependent: :destroy
+  has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
   has_many :passive_relationships, class_name:  "Relationship", foreign_key: "followed_id", dependent: :destroy
   has_many :follows, through: :active_relationships, source: :followed, dependent: :destroy
   has_many :followed_by, through: :passive_relationships, source: :follower, dependent: :destroy
@@ -67,8 +67,8 @@ class User < ActiveRecord::Base
   scope :verified, -> {where.not(verified_at: nil)}
   scope :enabled, -> { where(disabled: false)}
 
-  before_create :generate_verification_token, if: "!admin?"
-  before_create :auto_verify_email, if: "admin?"
+  before_create :generate_verification_token, unless: :admin?
+  before_create :auto_verify_email, unless: :admin?
   before_validation :set_validate_password, on: :create
   after_commit :send_verification_mail, on: :create
   after_save :add_topics
@@ -184,11 +184,11 @@ class User < ActiveRecord::Base
   end
 
   def send_verification_mail
-    UserNotifier.email_verification(self).deliver unless admin?
+    UserNotifier.email_verification(self).deliver_now unless admin?
   end
 
   def send_password_recovery_mail
-    UserNotifier.password_reset(self).deliver
+    UserNotifier.password_reset(self).deliver_now
   end
 
   def set_validate_password

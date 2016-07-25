@@ -4,3 +4,27 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
+<% 3.times do |i|%>
+valid_abuse_report_<%=i%>:
+  abuse_reportable_id: 1
+  abuse_reportable_type: Question
+  user_id: <%=i+1%>
+<%end%>
+
+<% 2.times do |i|%>
+valid_answer_abuse_report_<%=i%>:
+  abuse_reportable_id: 1
+  abuse_reportable_type: Answer
+  user_id: <%=i+1%>
+<%end%>
+
+<% 2.times do |i|%>
+valid_comment_abuse_report_<%=i%>:
+  abuse_reportable_id: 1
+  abuse_reportable_type: Comment
+  user_id: <%=i+1%>
+<%end%>
+
+
+
+

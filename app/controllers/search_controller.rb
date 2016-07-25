@@ -1,7 +1,6 @@
 class SearchController < ApplicationController
 
   def create
-    # debugger
     query = params[:query]
 
     if params[:search_topic].present?

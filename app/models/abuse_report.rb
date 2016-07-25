@@ -65,7 +65,4 @@ class AbuseReport < ActiveRecord::Base
     abuse_reportable_type == "Answer" && abuse_reportable.is_credited_answer?
   end
 
-
-
-
 end

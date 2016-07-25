@@ -5,9 +5,11 @@
 # below each fixture, per the syntax in the comments below
 #
 correct_answer_1:
+  id: 1
   content: "answer for a correct question."
   question_id: 2
   user_id: 1
+  abuse_reports_count: 2
 
 correct_answer_2:
   content: "answer for a correct question."

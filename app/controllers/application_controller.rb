@@ -41,6 +41,12 @@ class ApplicationController < ActionController::Base
     size ||= get_notifications.size
   end
 
+  def ensure_anynomous
+    if signed_in?
+      flash[:alert] = "You are already logged in."
+      redirect_to root_path
+    end
+  end
   protected
 
   def find_logged_in_user
@@ -59,12 +65,6 @@ class ApplicationController < ActionController::Base
     cookies.permanent[:remember_token] = user.remember_me_token
   end
 
-  def ensure_anynomous
-    if signed_in?
-      flash[:alert] = "You are already logged in."
-      redirect_to root_path
-    end
-  end
 
   def sign_in_from_remember_token
     if cookies[:remember_token].present?
