@@ -1,0 +1,13 @@
+{
+	"name": "Prashna push notifications",
+	"short_name": "push-prashna",
+	"start_url": "./push-simple/",
+	"display": "standalone",
+	"icons": [{
+		"src": "images/dollar.jpeg",
+		"sizes": "192x192",
+		"type": "image/jpeg"
+	}],
+	"gcm_sender_id": "360865367036",
+	"gcm_user_visible_only": true
+}

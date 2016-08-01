@@ -13,3 +13,17 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
+if ('serviceWorker' in navigator) {
+  console.log('Service Worker is supported');
+  navigator.serviceWorker.register('/serviceworker.js')
+    .then(function(registration) {
+      console.log('Successfully registered!', ':^)', registration);
+      registration.pushManager.subscribe({ userVisibleOnly: true })
+        .then(function(subscription) {
+              $.post("/subscribe", { subscription: subscription.toJSON() });
+            console.log('endpoint:', subscription.endpoint);
+        });
+  }).catch(function(error) {
+    console.log('Registration failed', ':^(', error);
+  });
+}

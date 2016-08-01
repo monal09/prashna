@@ -16,3 +16,8 @@ Rails.application.config.assets.precompile += %w( polling.js )
 Rails.application.config.assets.precompile += %w( abuse_reports.js )
 Rails.application.config.assets.precompile += %w( notification.js )
 Rails.application.config.assets.precompile += %w( time_show.js )
+Rails.application.configure do
+  config.assets.precompile += %w[
+    serviceworker.js
+  ]
+end

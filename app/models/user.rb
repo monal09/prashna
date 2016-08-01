@@ -63,6 +63,7 @@ class User < ActiveRecord::Base
   has_many :passive_relationships, class_name:  "Relationship", foreign_key: "followed_id", dependent: :destroy
   has_many :follows, through: :active_relationships, source: :followed, dependent: :destroy
   has_many :followed_by, through: :passive_relationships, source: :follower, dependent: :destroy
+  has_many :push_notification_tokens, dependent: :nullify
 
   scope :verified, -> {where.not(verified_at: nil)}
   scope :enabled, -> { where(disabled: false)}

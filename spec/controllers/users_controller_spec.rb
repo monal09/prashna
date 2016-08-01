@@ -108,7 +108,7 @@ RSpec.describe UsersController, type: :controller do
         it "displays flash message" do
           send_request_with_valid_attributes
           expect(flash[:notice]).to eq "Signup successfull!!. A verification
-          mail has been sent to your user id #{user.email}. Please verify your account to continue"
+          mail has been sent to your user id aafbb12@hh.de. Please verify your account to continue"
         end
 
         it "gives redirection response" do

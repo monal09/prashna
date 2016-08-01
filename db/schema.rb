@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160623061939) do
+ActiveRecord::Schema.define(version: 20160729062052) do
 
   create_table "abuse_reports", force: :cascade do |t|
     t.integer  "abuse_reportable_id",   limit: 4
@@ -103,6 +103,19 @@ ActiveRecord::Schema.define(version: 20160623061939) do
   end
 
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
+
+  create_table "push_notification_tokens", force: :cascade do |t|
+    t.string   "auth_token", limit: 255,   null: false
+    t.string   "p256dh",     limit: 255,   null: false
+    t.text     "endpoint",   limit: 65535, null: false
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "push_notification_tokens", ["auth_token"], name: "index_push_notification_tokens_on_auth_token", using: :btree
+  add_index "push_notification_tokens", ["p256dh"], name: "index_push_notification_tokens_on_p256dh", using: :btree
+  add_index "push_notification_tokens", ["user_id"], name: "index_push_notification_tokens_on_user_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.string   "title",               limit: 255,                   null: false

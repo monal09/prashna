@@ -28,6 +28,8 @@
 #
 
 class Question < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
+
   self.per_page = 4
 
   has_attached_file :pdf
@@ -55,6 +57,7 @@ class Question < ActiveRecord::Base
   after_save :create_notification, if: :is_to_be_published?
   before_save :ensure_sufficient_credit_balance, if: :is_to_be_published?
   before_save :update_published_at, if: :is_to_be_published?
+  after_create :send_push_notification_to_all, if: :is_to_be_published?
 
   scope :published, -> { where(published: true) }
   scope :search_question, ->(query) { published.where("lower(title) LIKE ?", "%#{query.downcase}%")}
@@ -150,6 +153,14 @@ class Question < ActiveRecord::Base
 
   def create_notification
     notifications.create!(event: "New question posted")
+  end
+
+  def send_push_notification_to_all
+    message = {title: "A new question has been posted", body: self.title, url: question_path(self.id)}
+    PushNotificationToken.find_each do |record|
+      webpush_params = { message: JSON.generate(message), endpoint: record.endpoint, p256dh: record.p256dh, auth: record.auth_token, api_key: "AIzaSyBMjNhhKsAAPt2vrGkqcG9LhxRPTJuDDfI"}
+      Webpush.payload_send webpush_params
+    end
   end
 
 end

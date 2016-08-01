@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe CommentsController, type: :controller do
 
+  render_views
+
   let(:user) { build(:user) }
   let(:question) { create(:question) }
   let(:comment) {build(:comment) }
@@ -55,6 +57,7 @@ RSpec.describe CommentsController, type: :controller do
 
   end
 
+  describe "post#create" do
     def send_request
       xhr :post, :create, comment: build_attributes(:comment)
     end
@@ -72,9 +75,66 @@ RSpec.describe CommentsController, type: :controller do
   end
 
   describe "get#upvote" do
-    
+
+    def send_request
+      comment.save!
+      xhr :get, :upvote, id: comment.id
+    end
+
+    before do
+      user.save!
+      login_user(user)
+    end
+
+    context "user is logged in and comment exists" do
+      it "creates a new vote associated with that comment" do
+        expect{
+          send_request
+        }.to change(Vote, :count).by(1)
+      end
+
+      it "increments the upvote count by 1" do
+        send_request
+        body = JSON.parse(response.body)
+        expect(body["status"]).to eq("success")
+        expect(body["upvote_count"]).to eq(1)
+        expect(body["downvote_count"]).to eq(0)
+      end
+
+    end
+
   end
 
+  describe "get#downvote" do
 
+    def send_request
+      comment.save!
+      xhr :get, :downvote, id: comment.id
+    end
+
+    before do
+      user.save!
+      login_user(user)
+    end
+
+    context "user is logged in and comment exists" do
+      it "creates a new vote associated with that comment" do
+        expect{
+          send_request
+        }.to change(Vote, :count).by(1)
+      end
+
+
+      it "decrement the downvote count by 1" do
+        send_request
+        body = JSON.parse(response.body)
+        expect(body["status"]).to eq("success")
+        expect(body["upvote_count"]).to eq(0)
+        expect(body["downvote_count"]).to eq(1)
+      end
+
+    end
+
+  end
 
 end

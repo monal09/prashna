@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'questions#index'
 
+  post "/subscribe" => "push_notification_tokens#create"
   get 'admin', to: "admin/questions#index", as: :admin_home
   get '/verification/:token', to: "users#verification", as: :account_activation
   get '/password_resets/:token', to: "password_resets#new", as: :reset_password

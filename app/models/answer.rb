@@ -21,6 +21,7 @@
 #
 
 class Answer < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
   validates :content, presence: true, length: {minimum: 10}
   validates_with UserPresenceValidator
   validates_with QuestionPublishabilityValidator
@@ -30,6 +31,7 @@ class Answer < ActiveRecord::Base
   after_create :update_answers_count
   after_save :decrement_answer_count, if: :is_admin_unpublished?
   after_save :increment_answer_count, if: :is_admin_published?
+  after_create :send_push_notification
 
   has_many :votes, as: :votable, dependent: :restrict_with_error
   has_many :comments, as: :commentable, dependent: :restrict_with_error
@@ -114,6 +116,20 @@ class Answer < ActiveRecord::Base
     if is_offensive?
       errors[:base] = "Offensive answer can't be saved"
       return false
+    end
+  end
+
+  def send_push_notification
+    questioner = question.user
+    questioner_subscriptions = questioner.push_notification_tokens
+    message = {
+      title: "New answer posted to your question.",
+      body: content,
+      url: question_path(self.question.id)
+    }
+    questioner_subscriptions.each do |subscription|
+      webpush_params = { message: JSON.generate(message), endpoint: subscription.endpoint, p256dh: subscription.p256dh, auth: subscription.auth_token, api_key: "AIzaSyBMjNhhKsAAPt2vrGkqcG9LhxRPTJuDDfI" }
+      Webpush.payload_send webpush_params
     end
   end
 

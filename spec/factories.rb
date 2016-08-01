@@ -1,4 +1,10 @@
 FactoryGirl.define do
+  factory :push_notification_token do
+    
+  end
+  factory :push_notification_ do
+    
+  end
   sequence :name do |n|
     "topic#{n}"
   end
@@ -34,6 +40,14 @@ FactoryGirl.define do
     commentable
   end
 
+  factory :vote do
+    upvote true
+    user
+    votable
+  end
+
+  factory :votable, parent: :comment do
+  end
 
   factory :invalid_user, parent: :user do
     password "ds"
