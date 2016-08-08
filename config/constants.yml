@@ -1,7 +1,6 @@
 development:
   email_from: abc@example.com
 
-
 production:
   email_from: def@example.com
 

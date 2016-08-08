@@ -20,7 +20,11 @@ class User < ActiveRecord::Base
 
   def check_token_expiry
     verification_token_expiry_at > Time.current
-   end
+  end
+
+  def verified?
+    verified_at.present?
+  end
 
   protected
 
@@ -46,12 +50,8 @@ class User < ActiveRecord::Base
     end
   end
 
-
-
   def send_verification_mail
     UserNotifier.user_verification(self).deliver
   end
-
-
-
+  
 end

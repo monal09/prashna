@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   
 
   get '/activate/:token', to: "users#activate", as: :account_activation
+
   resources :users
 
   controller :session do
