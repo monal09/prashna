@@ -129,7 +129,7 @@ class Answer < ActiveRecord::Base
     }
     questioner_subscriptions.each do |subscription|
       webpush_params = { message: JSON.generate(message), endpoint: subscription.endpoint, p256dh: subscription.p256dh, auth: subscription.auth_token, api_key: "AIzaSyBMjNhhKsAAPt2vrGkqcG9LhxRPTJuDDfI" }
-      Webpush.payload_send webpush_params
+      # Webpush.payload_send webpush_params
     end
   end
 

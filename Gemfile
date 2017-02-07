@@ -5,6 +5,7 @@ gem 'bcrypt', '~> 3.1.7'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
+
 gem 'database_cleaner'
 
 gem 'factory_girl_rails'
@@ -13,6 +14,8 @@ gem 'jbuilder', '~> 2.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jdbc-mysql',      '= 5.1.35',  :platform => :jruby
+gem 'thinking-sphinx', '~> 3.2.0'
 
 # Use mysql2 as the database for Active Record
 gem 'mysql2'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160729062052) do
+ActiveRecord::Schema.define(version: 20161014114847) do
 
   create_table "abuse_reports", force: :cascade do |t|
     t.integer  "abuse_reportable_id",   limit: 4
@@ -125,7 +125,6 @@ ActiveRecord::Schema.define(version: 20160729062052) do
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
     t.boolean  "published",                         default: false
-    t.string   "slug",                limit: 255
     t.integer  "answers_count",       limit: 4,     default: 0
     t.string   "pdf_file_name",       limit: 255
     t.string   "pdf_content_type",    limit: 255
