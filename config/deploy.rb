@@ -2,13 +2,11 @@
 lock '3.5.0'
 
 set :application, 'prashna'
-set :repo_url, 'git@github.com:monal/prashna.git'
+set :repo_url, 'git@github.com:monal09/prashna.git'
 set :format, :pretty
 set :sudo, false
 set :keep_releases, 5
-set :linked_files, [ 'config/secrets.yml',
-                     'config/database.yml',
-                     'config/constants.yml' ]
+set :linked_files, [ 'config/constants.yml' ]
 set :linked_dirs, [ 'log',
                     'tmp/pids',
                     'tmp/cache',
@@ -16,6 +14,17 @@ set :linked_dirs, [ 'log',
                     'vendor/bundle',
                     'public/system',
                     'public/assets' ]
+
+namespace :passenger do
+  desc "restart passenger."
+  task :restart do
+    on roles([:app, :worker]) do
+      within current_path do
+        execute %{ echo "-----> Restarting passenger" }
+        execute :touch, 'tmp/restart.txt'
+      end
+  end  end
+end
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -48,15 +57,15 @@ set :linked_dirs, [ 'log',
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
-namespace :deploy do
+# namespace :deploy do
 
-  after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
-    end
-  end
+#   after :restart, :clear_cache do
+#     on roles(:web), in: :groups, limit: 3, wait: 10 do
+#       # Here we can do anything such as:
+#       # within release_path do
+#       #   execute :rake, 'cache:clear'
+#       # end
+#     end
+#   end
 
-end
+# end
