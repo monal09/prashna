@@ -1,52 +1,33 @@
 source 'https://rubygems.org'
 
-# Use ActiveModel has_secure_password
+ruby '2.1.5'
 gem 'bcrypt', '~> 3.1.7'
-
-# Use CoffeeScript for .coffee assets and views
+gem 'capistrano' 
+gem 'capistrano-bundler'
+gem 'capistrano-rails'
+gem 'capistrano-passenger'
 gem 'coffee-rails', '~> 4.1.0'
-
 gem 'database_cleaner'
-
 gem 'factory_girl_rails'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
-
-# Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jdbc-mysql',      '= 5.1.35',  :platform => :jruby
 gem 'thinking-sphinx', '~> 3.2.0'
-
-# Use mysql2 as the database for Active Record
 gem 'mysql2'
-
 gem 'paperclip', '~> 4.2'
-
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
-
 gem 'rspec-rails'
-# Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 gem 'serviceworker-rails'
-
-# bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-
 gem 'shoulda', '~> 3.5'
 gem 'shoulda-matchers', '~> 2.0'
 gem "shoulda-callback-matchers", "~> 1.0"
-
 gem 'stripe'
-
-# Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-
 gem 'will_paginate', '~> 3.1.0'
 gem 'will_paginate-bootstrap'
 gem "webpush"
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
 
 # Use Unicorn as the app server
 # gem 'unicorn'
