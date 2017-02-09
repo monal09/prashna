@@ -12,8 +12,7 @@ set :linked_dirs, [ 'log',
                     'tmp/cache',
                     'tmp/sockets',
                     'vendor/bundle',
-                    'public/system',
-                    'public/assets' ]
+                    'public/system' ]
 
 namespace :passenger do
   desc "restart passenger."
