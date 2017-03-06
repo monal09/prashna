@@ -1,0 +1,23 @@
+octopus:
+  environments:
+    - staging
+    - development
+  replicated: true
+  fully_replicated: true 
+  staging:
+    slave:
+      host: 35.160.201.201
+      adapter: mysql2
+      database: prashna_staging
+      username: test_user
+      password: monal@V1
+      reconnect: false
+
+  development:
+    slave:
+      host: 35.160.201.201
+      adapter: mysql2
+      database: prashna_staging
+      username: test_user
+      password: monal@V1
+      reconnect: false

@@ -28,7 +28,10 @@ staging:
 
 development:
   <<: *default
-  database: prashna_development
+  database: prashna_staging
+  host: 35.166.38.58
+  username: test_user
+  password: monal@V1
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
