@@ -133,6 +133,7 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
+    programr (0.0.1)
     rack (1.6.5)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -278,6 +279,7 @@ DEPENDENCIES
   jquery-rails
   mysql2
   paperclip (~> 4.2)
+  programr
   rails (= 4.2.6)
   rails-footnotes (~> 4.0)
   rspec-rails

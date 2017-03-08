@@ -16,6 +16,7 @@ gem 'jdbc-mysql',      '= 5.1.35',  :platform => :jruby
 gem 'thinking-sphinx', '~> 3.2.0'
 gem 'mysql2'
 gem 'paperclip', '~> 4.2'
+gem 'programr'
 gem 'rails', '4.2.6'
 gem 'rspec-rails'
 gem 'sass-rails', '~> 5.0'

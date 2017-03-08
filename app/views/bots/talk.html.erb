@@ -1,0 +1,23 @@
+<%= javascript_include_tag 'bot' %>
+
+
+<div class="container">
+<h1>Bot</h1>
+<p class="lead">Talk to bot</p> 
+
+<div class="bs-callout bs-callout-info bot-response hide" id="callout-alerts-no-default">
+  <h4>Bot says:</h4>
+  <p id="display-response"> </p>
+</div>
+
+<div class="row home-row">
+  <div class="col-lg-12">
+    <div class="input-group">
+      <input id="query" data-behavior="query" type="text" class="form-control" placeholder="Ask something...">
+      <span class="input-group-btn">
+        <button id="search" class="btn btn-default" type="button">Ask</button>
+      </span>
+    </div>
+  </div>
+</div>
+</div>

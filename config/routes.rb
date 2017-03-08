@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get 'admin', to: "admin/questions#index", as: :admin_home
   get '/verification/:token', to: "users#verification", as: :account_activation
   get '/password_resets/:token', to: "password_resets#new", as: :reset_password
+  get '/ask_bot', to: "bots#talk"
+  get '/bot_response', to: "bots#bot_response"
   resources :password_requests, only: [:create, :new]
   resources :password_resets, only: [:create]
 
